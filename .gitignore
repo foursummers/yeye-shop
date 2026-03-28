@@ -1,0 +1,21 @@
+node_modules/
+dist/
+pdf_out/
+.cursor/
+
+# Other unrelated projects in the same directory
+Cipher-Labs-landing/
+Curry-astro/
+life-destiny-kline/
+navi-param-dashboard/
+Navi-Year-In-Review/
+Navi-Year-In-Review-latest/
+Navi-Year-In-Review-temp/
+ShengzhiDAO/
+Sui-Leverage-Vault-Demo/
+wen-wallet/
+YELLO/
+
+# Legacy files not part of this project
+script.js
+styles.css
