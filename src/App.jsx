@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
-import { PRODUCTS as RAW_PRODUCTS } from "./data/products";
+import { PRODUCTS as SEED_PRODUCTS } from "./data/products";
 import { supabase, uploadImage } from "./lib/supabase";
 
 const MARGIN = 1.38;
@@ -33,10 +33,7 @@ function orderToDb(o) {
   return { id:o.id, product_id:o.prodId, quantity:o.qty, wechat:o.wechat, customer_name:o.name, phone:o.phone, address:o.addr, note:o.note, status:o.status, paid_amount:o.paidAmt, order_date:o.date, order_time:o.time, group_id:o.groupId||o.id };
 }
 
-const SEED_PRODUCTS = RAW_PRODUCTS.map(p => ({
-  id: p.id, n: p.name, cat: p.category, cost: p.cost, tb: p.taobaoPrice, st: p.stock, loc: p.location, note: p.note||"", season: "Q1 2025",
-  imgs: p.images && p.images.length > 0 ? p.images : [], desc: p.size ? `${p.desc}（${p.size}）` : p.desc, recommended: false, hidden: false,
-}));
+// SEED_PRODUCTS imported directly from ./data/products (already in frontend format)
 
 // ── localStorage fallback ────────────────────────────────────
 function lsGet(k, d) { try { const s=localStorage.getItem(k); return s?JSON.parse(s):d; } catch { return d; } }
