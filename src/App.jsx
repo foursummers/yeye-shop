@@ -27,6 +27,8 @@ const INIT_PRODUCTS = RAW_PRODUCTS.map(p => ({
   season: "Q1 2025",
   imgs: p.images && p.images.length > 0 ? p.images : [],
   desc: p.size ? `${p.desc}（${p.size}）` : p.desc,
+  recommended: false,
+  hidden: false,
 }));
 
 const INIT_ORDERS = [];
@@ -79,7 +81,7 @@ function StatusBadge({ status }) {
 function ShareModal({ prod, onClose, allProds }) {
   const [mode, setMode] = useState("single");
   const sell = sp(prod), disc = dc(prod);
-  const catProds = allProds.filter(p => p.cat === prod.cat);
+  const catProds = allProds.filter(p => p.cat === prod.cat && !p.hidden);
 
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:300, display:"flex", alignItems:"flex-end" }}
@@ -155,7 +157,7 @@ function ShareModal({ prod, onClose, allProds }) {
 // ── Add/Edit Product Modal ───────────────────────────────────
 function ProductModal({ product, onSave, onClose }) {
   const isEdit = !!product?.id;
-  const [form, setForm] = useState(product || { id:"", n:"", cat:"", cost:0, tb:0, st:0, loc:"工厂", note:"", season:"Q2 2025", imgs:[], desc:"" });
+  const [form, setForm] = useState(product || { id:"", n:"", cat:"", cost:0, tb:0, st:0, loc:"工厂", note:"", season:"Q2 2025", imgs:[], desc:"", recommended:false, hidden:false });
   const f = (k,v) => setForm(p=>({...p,[k]:v}));
 
   return (
@@ -224,6 +226,14 @@ function ProductModal({ product, onSave, onClose }) {
             const b64s=(form.imgs||[]).filter(s=>s&&s.startsWith("data:"));
             f("imgs",[...b64s,...urls].slice(0,4));
           }} rows={2} placeholder="/images/10001.jpg" style={{ width:"100%", padding:"8px 10px", border:"1px solid #e0ddd8", borderRadius:6, fontSize:11, boxSizing:"border-box", resize:"none", color:"#555" }}/>
+        </div>
+        <div style={{ display:"flex", gap:10, marginBottom:14 }}>
+          <button onClick={()=>f("recommended",!form.recommended)} style={{ flex:1, padding:"9px 0", border:"1px solid", borderColor:form.recommended?"#854f0b":"#e0ddd8", background:form.recommended?"#faeeda":"#fff", color:form.recommended?"#854f0b":"#aaa", borderRadius:6, cursor:"pointer", fontSize:11, fontWeight:form.recommended?600:400 }}>
+            {form.recommended?"★ 已推荐":"☆ 设为推荐"}
+          </button>
+          <button onClick={()=>f("hidden",!form.hidden)} style={{ flex:1, padding:"9px 0", border:"1px solid", borderColor:form.hidden?"#a32d2d":"#e0ddd8", background:form.hidden?"#fcebeb":"#fff", color:form.hidden?"#a32d2d":"#aaa", borderRadius:6, cursor:"pointer", fontSize:11, fontWeight:form.hidden?600:400 }}>
+            {form.hidden?"已下架":"上架中"}
+          </button>
         </div>
         <button onClick={()=>onSave(form)} style={{ width:"100%", padding:"13px 0", background:"#111", border:"none", color:"#faf9f7", fontSize:12, letterSpacing:1, borderRadius:6, cursor:"pointer" }}>
           {isEdit?"保存修改":"添加商品"}
@@ -312,7 +322,19 @@ export default function App() {
   const cats = ["全部", ...Array.from(new Set(products.map(p=>p.cat)))];
   const seasons = ["全部", ...Array.from(new Set(products.map(p=>p.season).filter(Boolean)))];
 
-  const filteredProds = useMemo(()=>products.filter(p=>{
+  const shopProds = useMemo(()=>{
+    let list = products.filter(p=>{
+      if(p.hidden) return false;
+      if(catFilter!=="全部"&&p.cat!==catFilter) return false;
+      if(seasonFilter!=="全部"&&p.season!==seasonFilter) return false;
+      if(searchQ&&!p.n.toLowerCase().includes(searchQ.toLowerCase())&&!p.id.toLowerCase().includes(searchQ.toLowerCase())) return false;
+      return true;
+    });
+    list.sort((a,b)=>(b.recommended?1:0)-(a.recommended?1:0));
+    return list;
+  },[products,catFilter,seasonFilter,searchQ]);
+
+  const adminProds = useMemo(()=>products.filter(p=>{
     if(catFilter!=="全部"&&p.cat!==catFilter) return false;
     if(seasonFilter!=="全部"&&p.season!==seasonFilter) return false;
     if(searchQ&&!p.n.toLowerCase().includes(searchQ.toLowerCase())&&!p.id.toLowerCase().includes(searchQ.toLowerCase())) return false;
@@ -331,6 +353,28 @@ export default function App() {
   function deleteProduct(id) {
     if(!confirm("确认删除该商品？")) return;
     setProducts(p=>p.filter(x=>x.id!==id));
+  }
+
+  function toggleRecommend(id) {
+    setProducts(p=>p.map(x=>x.id===id?{...x,recommended:!x.recommended}:x));
+  }
+
+  function toggleHidden(id) {
+    setProducts(p=>p.map(x=>x.id===id?{...x,hidden:!x.hidden}:x));
+  }
+
+  function batchDelistSeason(season) {
+    const count = products.filter(p=>p.season===season&&!p.hidden).length;
+    if(!count) return alert("该季度没有可下架的商品");
+    if(!confirm(`确认批量下架「${season}」的 ${count} 件在架商品？`)) return;
+    setProducts(p=>p.map(x=>x.season===season?{...x,hidden:true}:x));
+  }
+
+  function batchRelistSeason(season) {
+    const count = products.filter(p=>p.season===season&&p.hidden).length;
+    if(!count) return alert("该季度没有已下架的商品");
+    if(!confirm(`确认批量重新上架「${season}」的 ${count} 件商品？`)) return;
+    setProducts(p=>p.map(x=>x.season===season?{...x,hidden:false}:x));
   }
 
   function saveOrder(form) {
@@ -391,14 +435,15 @@ export default function App() {
               <button key={s} onClick={()=>setSeasonFilter(s)} style={{ flexShrink:0, padding:"3px 10px", borderRadius:20, border:"1px solid", borderColor:seasonFilter===s?"#111":"#e0ddd8", background:seasonFilter===s?"#111":"transparent", color:seasonFilter===s?"#fff":"#aaa", fontSize:10, cursor:"pointer" }}>{s}</button>
             ))}
           </div>
-          <div style={{ fontSize:9, color:"#ccc", letterSpacing:1.5, marginBottom:14 }}>{filteredProds.length} ITEMS</div>
+          <div style={{ fontSize:9, color:"#ccc", letterSpacing:1.5, marginBottom:14 }}>{shopProds.length} ITEMS</div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px 12px" }}>
-            {filteredProds.map(p=>{
+            {shopProds.map(p=>{
               const sell=sp(p),d=dc(p);
               return (
                 <div key={p.id} onClick={()=>openDetail(p)} style={{ cursor:"pointer" }}>
                   <div style={{ aspectRatio:"3/4", background:"#ebe8e3", overflow:"hidden", marginBottom:9, position:"relative" }}>
                     <ImgBox srcs={p.imgs} alt={p.n} style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
+                    {p.recommended&&<div style={{ position:"absolute", top:6, left:6, background:"#111", padding:"2px 6px", fontSize:8, color:"#FFD600", letterSpacing:0.5, fontWeight:600 }}>推荐</div>}
                     {p.cost===0&&<div style={{ position:"absolute", bottom:0, left:0, right:0, background:"rgba(17,17,17,0.7)", padding:"4px 8px", fontSize:9, color:"#fff", letterSpacing:1 }}>仅付邮费</div>}
                     {p.st>0&&p.st<=10&&<div style={{ position:"absolute", top:6, right:6, background:"#fff", fontSize:8, padding:"2px 5px" }}>库存不足</div>}
                   </div>
@@ -441,6 +486,7 @@ export default function App() {
               <Tag>{dp.cat}</Tag>
               <Tag color={dp.loc==="国内仓"?"#0f6e56":"#854f0b"} bg={dp.loc==="国内仓"?"#e1f5ee":"#faeeda"}>{dp.loc==="国内仓"?"国内仓·1-2周":"工厂·2-3周"}</Tag>
               {dp.season&&<Tag>{dp.season}</Tag>}
+              {dp.recommended&&<Tag color="#854f0b" bg="#faeeda">推荐</Tag>}
               {dp.st>0&&dp.st<=10&&<Tag color="#a32d2d" bg="#fcebeb">库存仅{dp.st}件</Tag>}
             </div>
             <h1 style={{ fontSize:17, fontWeight:400, margin:"0 0 10px", lineHeight:1.5 }}>{dp.n}</h1>
@@ -580,27 +626,40 @@ export default function App() {
               {adminTab==="products"&&(
                 <div>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-                    <span style={{ fontSize:11, color:"#aaa" }}>{products.length} 款商品</span>
+                    <span style={{ fontSize:11, color:"#aaa" }}>{products.length} 款商品（{products.filter(p=>!p.hidden).length} 在架 / {products.filter(p=>p.hidden).length} 已下架）</span>
                     <button onClick={()=>setEditProduct("new")} style={{ padding:"7px 14px", background:"#111", border:"none", color:"#faf9f7", fontSize:11, borderRadius:6, cursor:"pointer" }}>+ 添加商品</button>
                   </div>
-                  <div style={{ display:"flex", gap:8, overflowX:"auto", marginBottom:12, scrollbarWidth:"none" }}>
+                  <div style={{ display:"flex", gap:8, overflowX:"auto", marginBottom:8, scrollbarWidth:"none" }}>
                     {seasons.map(s=>(
                       <button key={s} onClick={()=>setSeasonFilter(s)} style={{ flexShrink:0, padding:"3px 10px", borderRadius:20, border:"1px solid", borderColor:seasonFilter===s?"#111":"#e0ddd8", background:seasonFilter===s?"#111":"transparent", color:seasonFilter===s?"#fff":"#aaa", fontSize:10, cursor:"pointer" }}>{s}</button>
                     ))}
                   </div>
+                  {seasonFilter!=="全部"&&(
+                    <div style={{ display:"flex", gap:8, marginBottom:10 }}>
+                      <button onClick={()=>batchDelistSeason(seasonFilter)} style={{ flex:1, padding:"8px 0", background:"#fcebeb", border:"none", fontSize:10, cursor:"pointer", borderRadius:5, color:"#a32d2d", fontWeight:500 }}>
+                        批量下架「{seasonFilter}」({products.filter(p=>p.season===seasonFilter&&!p.hidden).length} 件在架)
+                      </button>
+                      <button onClick={()=>batchRelistSeason(seasonFilter)} style={{ flex:1, padding:"8px 0", background:"#e1f5ee", border:"none", fontSize:10, cursor:"pointer", borderRadius:5, color:"#0f6e56", fontWeight:500 }}>
+                        批量上架「{seasonFilter}」({products.filter(p=>p.season===seasonFilter&&p.hidden).length} 件已下架)
+                      </button>
+                    </div>
+                  )}
                   <input value={searchQ} onChange={e=>setSearchQ(e.target.value)} placeholder="搜索商品" style={{ ...S.input, marginBottom:12 }}/>
-                  {filteredProds.map(p=>{
+                  {adminProds.map(p=>{
                     const sell=sp(p),d=dc(p);
                     return (
-                      <div key={p.id} style={{ background:"#fff", border:S.border, padding:"11px 12px", marginBottom:9, borderRadius:6, display:"flex", gap:10 }}>
-                        <div style={{ width:60, height:60, flexShrink:0, overflow:"hidden", background:"#ebe8e3" }}>
+                      <div key={p.id} style={{ background:p.hidden?"#f8f6f4":"#fff", border:S.border, padding:"11px 12px", marginBottom:9, borderRadius:6, display:"flex", gap:10, opacity:p.hidden?0.55:1 }}>
+                        <div style={{ width:60, height:60, flexShrink:0, overflow:"hidden", background:"#ebe8e3", position:"relative" }}>
                           <ImgBox srcs={p.imgs} alt={p.n} style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
+                          {p.recommended&&<div style={{ position:"absolute", top:0, left:0, background:"#111", padding:"1px 4px", fontSize:7, color:"#FFD600", fontWeight:700 }}>★</div>}
                         </div>
                         <div style={{ flex:1, minWidth:0 }}>
                           <div style={{ display:"flex", gap:4, marginBottom:4, flexWrap:"wrap" }}>
                             <Tag>{p.cat}</Tag>
                             {p.season&&<Tag>{p.season}</Tag>}
                             <Tag color={p.loc==="国内仓"?"#0f6e56":"#854f0b"} bg={p.loc==="国内仓"?"#e1f5ee":"#faeeda"}>{p.loc}</Tag>
+                            {p.recommended&&<Tag color="#854f0b" bg="#faeeda">推荐</Tag>}
+                            {p.hidden&&<Tag color="#a32d2d" bg="#fcebeb">已下架</Tag>}
                           </div>
                           <div style={{ fontSize:12, fontWeight:500, color:"#111", marginBottom:3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{p.n}</div>
                           <div style={{ fontSize:10, color:"#aaa", marginBottom:4 }}>编号: {p.id} · 库存: {p.st}件</div>
@@ -611,10 +670,12 @@ export default function App() {
                             {d&&d>0&&<span style={{ fontSize:9, background:"#111", color:"#fff", padding:"1px 4px" }}>-{d}%</span>}
                           </div>
                         </div>
-                        <div style={{ display:"flex", flexDirection:"column", gap:5, flexShrink:0 }}>
-                          <button onClick={()=>setEditProduct(p)} style={{ padding:"5px 10px", background:"#f5f3f0", border:"none", fontSize:10, cursor:"pointer", borderRadius:4, color:"#555" }}>编辑</button>
-                          <button onClick={()=>setShareTarget(p)} style={{ padding:"5px 10px", background:"#f5f3f0", border:"none", fontSize:10, cursor:"pointer", borderRadius:4, color:"#555" }}>分享</button>
-                          <button onClick={()=>deleteProduct(p.id)} style={{ padding:"5px 10px", background:"#fcebeb", border:"none", fontSize:10, cursor:"pointer", borderRadius:4, color:"#a32d2d" }}>删除</button>
+                        <div style={{ display:"flex", flexDirection:"column", gap:4, flexShrink:0 }}>
+                          <button onClick={()=>toggleRecommend(p.id)} style={{ padding:"4px 8px", background:p.recommended?"#faeeda":"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", borderRadius:4, color:p.recommended?"#854f0b":"#aaa", fontWeight:p.recommended?600:400 }}>{p.recommended?"★推荐":"☆推荐"}</button>
+                          <button onClick={()=>toggleHidden(p.id)} style={{ padding:"4px 8px", background:p.hidden?"#e1f5ee":"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", borderRadius:4, color:p.hidden?"#0f6e56":"#555" }}>{p.hidden?"上架":"下架"}</button>
+                          <button onClick={()=>setEditProduct(p)} style={{ padding:"4px 8px", background:"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", borderRadius:4, color:"#555" }}>编辑</button>
+                          <button onClick={()=>setShareTarget(p)} style={{ padding:"4px 8px", background:"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", borderRadius:4, color:"#555" }}>分享</button>
+                          <button onClick={()=>deleteProduct(p.id)} style={{ padding:"4px 8px", background:"#fcebeb", border:"none", fontSize:9, cursor:"pointer", borderRadius:4, color:"#a32d2d" }}>删除</button>
                         </div>
                       </div>
                     );
