@@ -35,8 +35,12 @@ create table if not exists orders (
   paid_amount numeric default 0,
   order_date text default '',
   order_time text default '',
+  group_id text default '',
   created_at timestamptz default now()
 );
+
+-- 如果已有 orders 表，补充 group_id 列：
+-- alter table orders add column if not exists group_id text default '';
 
 -- 3. 开放匿名读写（简易方案，适合内部使用）
 alter table products enable row level security;

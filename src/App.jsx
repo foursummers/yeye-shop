@@ -15,6 +15,7 @@ const STATUS_CONFIG = {
   shipped:   { label: "已发货", color: "#3b6d11", bg: "#eaf3de" },
   delivered: { label: "已到货", color: "#0f6e56", bg: "#e1f5ee" },
   nostock:   { label: "无货",   color: "#a32d2d", bg: "#fcebeb" },
+  cancelled: { label: "已取消", color: "#999", bg: "#f0f0f0" },
 };
 const STATUSES = Object.keys(STATUS_CONFIG);
 
@@ -26,10 +27,10 @@ function productToDb(p) {
   return { id:p.id, name:p.n, category:p.cat, cost:p.cost, taobao_price:p.tb, stock:p.st, location:p.loc, note:p.note, season:p.season, images:p.imgs, description:p.desc, recommended:p.recommended, hidden:p.hidden };
 }
 function dbToOrder(r) {
-  return { id:r.id, prodId:r.product_id, qty:r.quantity, wechat:r.wechat||"", name:r.customer_name||"", phone:r.phone||"", addr:r.address||"", note:r.note||"", status:r.status||"pending", paidAmt:Number(r.paid_amount)||0, date:r.order_date||"", time:r.order_time||"" };
+  return { id:r.id, prodId:r.product_id, qty:r.quantity, wechat:r.wechat||"", name:r.customer_name||"", phone:r.phone||"", addr:r.address||"", note:r.note||"", status:r.status||"pending", paidAmt:Number(r.paid_amount)||0, date:r.order_date||"", time:r.order_time||"", groupId:r.group_id||r.id };
 }
 function orderToDb(o) {
-  return { id:o.id, product_id:o.prodId, quantity:o.qty, wechat:o.wechat, customer_name:o.name, phone:o.phone, address:o.addr, note:o.note, status:o.status, paid_amount:o.paidAmt, order_date:o.date, order_time:o.time };
+  return { id:o.id, product_id:o.prodId, quantity:o.qty, wechat:o.wechat, customer_name:o.name, phone:o.phone, address:o.addr, note:o.note, status:o.status, paid_amount:o.paidAmt, order_date:o.date, order_time:o.time, group_id:o.groupId||o.id };
 }
 
 const SEED_PRODUCTS = RAW_PRODUCTS.map(p => ({
@@ -259,6 +260,46 @@ function OrderModal({ order, products, onSave, onClose }) {
   );
 }
 
+// ── Checkout Modal (batch) ────────────────────────────────────
+function CheckoutModal({ cart, products, onSubmit, onClose }) {
+  const [form, setForm] = useState({ wechat:lsGet("yeye_mywx",""), name:"", phone:"", addr:"", note:"" });
+  const f = (k,v) => setForm(p=>({...p,[k]:v}));
+  const cartItems = cart.map(item=>{const prod=products.find(p=>p.id===item.prodId);return prod?{...item,prod,price:sp(prod)||0}:null;}).filter(Boolean);
+  const total = cartItems.reduce((s,i)=>s+i.price*i.qty,0);
+  const hasFree = cartItems.some(i=>i.prod.cost===0);
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }} onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{ background:"#faf9f7", borderRadius:12, width:"100%", maxWidth:480, maxHeight:"90vh", overflowY:"auto", padding:20 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", marginBottom:16 }}>
+          <span style={{ fontWeight:600, fontSize:14 }}>确认订单</span>
+          <button onClick={onClose} style={{ background:"none", border:"none", fontSize:18, cursor:"pointer", color:"#aaa" }}>×</button>
+        </div>
+        <div style={{ background:"#f5f3f0", borderRadius:8, padding:12, marginBottom:16 }}>
+          <div style={{ fontSize:10, color:"#aaa", marginBottom:8, letterSpacing:1 }}>订单商品（{cartItems.length}件）</div>
+          {cartItems.map(item=>(
+            <div key={item.prodId} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"6px 0", borderBottom:"1px solid #e8e4de", fontSize:12 }}>
+              <span style={{ flex:1, color:"#333", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", marginRight:8 }}>{item.prod.n}</span>
+              <span style={{ color:"#aaa", marginRight:8, flexShrink:0 }}>×{item.qty}</span>
+              <span style={{ fontWeight:600, flexShrink:0 }}>{item.prod.cost===0?"邮费":"¥"+(item.price*item.qty)}</span>
+            </div>
+          ))}
+          <div style={{ display:"flex", justifyContent:"space-between", paddingTop:10, fontSize:14, fontWeight:600 }}>
+            <span>合计</span><span>¥{total}{hasFree?" + 部分邮费":""}</span>
+          </div>
+        </div>
+        {[["微信号 *","wechat","text"],["收货人姓名 *","name","text"],["手机号","phone","tel"],["收货地址 *","addr","text"],["备注","note","text"]].map(([lbl,key,type])=>(
+          <div key={key} style={{ marginBottom:10 }}>
+            <div style={{ fontSize:10, color:"#aaa", marginBottom:3 }}>{lbl}</div>
+            <input type={type} value={form[key]} onChange={e=>f(key,e.target.value)} style={{ width:"100%", padding:"9px 11px", border:"1px solid #e0ddd8", borderRadius:6, fontSize:13, boxSizing:"border-box", background:"#fff" }}/>
+          </div>
+        ))}
+        <button onClick={()=>onSubmit(form)} style={{ width:"100%", padding:"13px 0", background:"#111", border:"none", color:"#faf9f7", fontSize:12, letterSpacing:1, borderRadius:6, cursor:"pointer", marginTop:4 }}>提交订单</button>
+        <div style={{ textAlign:"center", fontSize:9, color:"#bbb", marginTop:8 }}>提交后请在微信群内确认付款</div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main App ─────────────────────────────────────────────────
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -278,6 +319,13 @@ export default function App() {
   const [editProduct, setEditProduct] = useState(null);
   const [editOrder, setEditOrder] = useState(null);
   const [copied, setCopied] = useState(null);
+  const [cart, setCart] = useState(()=>lsGet("yeye_cart",[]));
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [myWechat, setMyWechat] = useState(()=>lsGet("yeye_mywx",""));
+  const [detailQty, setDetailQty] = useState(1);
+  const [addedTip, setAddedTip] = useState(false);
+  const [orderWxFilter, setOrderWxFilter] = useState("");
+  const [orderProdFilter, setOrderProdFilter] = useState("");
   const scrollPos = useRef(0);
 
   // ── Load data on mount ───────────────────────────────────
@@ -314,6 +362,7 @@ export default function App() {
   // ── Sync to localStorage when not using DB ────────────────
   useEffect(() => { if (!dbMode && !loading) { lsSet("yeye_p3", products); } }, [products, dbMode, loading]);
   useEffect(() => { if (!dbMode && !loading) { lsSet("yeye_o", orders); } }, [orders, dbMode, loading]);
+  useEffect(() => { lsSet("yeye_cart", cart); }, [cart]);
 
   // ── Derived data ──────────────────────────────────────────
   const cats = ["全部", ...Array.from(new Set(products.map(p=>p.cat)))];
@@ -328,6 +377,37 @@ export default function App() {
   const adminProds = useMemo(()=>products.filter(p=>{ if(catFilter!=="全部"&&p.cat!==catFilter) return false; if(seasonFilter!=="全部"&&p.season!==seasonFilter) return false; if(searchQ&&!p.n.toLowerCase().includes(searchQ.toLowerCase())&&!p.id.toLowerCase().includes(searchQ.toLowerCase())) return false; return true; }),[products,catFilter,seasonFilter,searchQ]);
 
   function cp(text,key){navigator.clipboard.writeText(text).catch(()=>{});setCopied(key);setTimeout(()=>setCopied(null),1800);}
+
+  // ── Cart ────────────────────────────────────────────────────
+  function addToCart(prodId, qty=1) {
+    setCart(c=>{const ex=c.find(x=>x.prodId===prodId);if(ex)return c.map(x=>x.prodId===prodId?{...x,qty:x.qty+qty}:x);return[...c,{prodId,qty}];});
+    setAddedTip(true); setTimeout(()=>setAddedTip(false),1500);
+  }
+  function removeFromCart(prodId){setCart(c=>c.filter(x=>x.prodId!==prodId));}
+  function updateCartQty(prodId,qty){setCart(c=>c.map(x=>x.prodId===prodId?{...x,qty:Math.max(1,qty)}:x));}
+
+  async function batchCheckout(info) {
+    if(!info.wechat||!info.name||!info.addr)return alert("请填写微信号、姓名和地址");
+    if(cart.length===0)return alert("购物车为空");
+    const gid=Date.now().toString(36).toUpperCase();
+    const now=new Date(),date=now.toLocaleDateString("zh-CN"),time=now.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+    const newOrders=cart.map((item,i)=>({id:gid+"-"+(i+1),prodId:item.prodId,qty:item.qty,wechat:info.wechat,name:info.name,phone:info.phone||"",addr:info.addr,note:info.note||"",status:"pending",paidAmt:0,date,time,groupId:gid}));
+    setOrders(o=>[...newOrders,...o]);
+    if(dbMode){const{error}=await supabase.from("orders").insert(newOrders.map(orderToDb));if(error)alert("订单提交失败: "+error.message);}
+    setMyWechat(info.wechat);lsSet("yeye_mywx",info.wechat);
+    setCart([]);setShowCheckout(false);setPage("myorders");
+  }
+
+  async function cancelGroup(groupId) {
+    if(!confirm("确认取消该订单？"))return;
+    setOrders(o=>o.map(x=>x.groupId===groupId?{...x,status:"cancelled"}:x));
+    if(dbMode) await supabase.from("orders").update({status:"cancelled"}).eq("group_id",groupId);
+  }
+
+  async function markGroupShipped(groupId) {
+    setOrders(o=>o.map(x=>x.groupId===groupId&&x.status==="paid"?{...x,status:"shipped"}:x));
+    if(dbMode) await supabase.from("orders").update({status:"shipped"}).eq("group_id",groupId).eq("status","paid");
+  }
 
   // ── Product CRUD ──────────────────────────────────────────
   async function saveProduct(form) {
@@ -405,7 +485,7 @@ export default function App() {
     if(dbMode) await supabase.from("orders").update({status}).eq("id",id);
   }
 
-  const openDetail = useCallback(p=>{scrollPos.current=window.scrollY||0;setDetail(p);window.scrollTo(0,0);},[]);
+  const openDetail = useCallback(p=>{scrollPos.current=window.scrollY||0;setDetail(p);setDetailQty(1);window.scrollTo(0,0);},[]);
   const closeDetail = useCallback(()=>{setDetail(null);requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,scrollPos.current)));},[]);
 
   const kanbanCols = STATUSES.map(s=>({ status:s, items:orders.filter(o=>o.status===s) }));
@@ -430,13 +510,18 @@ export default function App() {
       {shareTarget&&<ShareModal prod={shareTarget} onClose={()=>setShareTarget(null)} allProds={products}/>}
       {editProduct&&<ProductModal product={editProduct==="new"?null:editProduct} onSave={saveProduct} onClose={()=>setEditProduct(null)}/>}
       {editOrder&&<OrderModal order={editOrder==="new"?null:editOrder} products={products} onSave={saveOrder} onClose={()=>setEditOrder(null)}/>}
+      {showCheckout&&<CheckoutModal cart={cart} products={products} onSubmit={batchCheckout} onClose={()=>setShowCheckout(false)}/>}
 
       {/* NAV */}
       <div style={{ position:"sticky", top:0, zIndex:90, background:S.bg, borderBottom:S.border }}>
         <div style={{ padding:"0 16px", height:50, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <span onClick={()=>{setPage("shop");setDetail(null);}} style={{ fontWeight:300, fontSize:21, cursor:"pointer", letterSpacing:4 }}>Yeye</span>
-          <div style={{ display:"flex", gap:12, alignItems:"center" }}>
+          <div style={{ display:"flex", gap:10, alignItems:"center" }}>
             <button onClick={()=>setPage("shop")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, color:page==="shop"?"#111":"#aaa", fontWeight:page==="shop"?600:400 }}>商品</button>
+            <button onClick={()=>setPage("cart")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, color:page==="cart"?"#111":"#aaa", fontWeight:page==="cart"?600:400, position:"relative" }}>
+              购物车{cart.length>0&&<span style={{ position:"absolute", top:-4, right:-10, background:"#111", color:"#fff", fontSize:8, width:16, height:16, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center" }}>{cart.reduce((s,i)=>s+i.qty,0)}</span>}
+            </button>
+            <button onClick={()=>setPage("myorders")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, color:page==="myorders"?"#111":"#aaa", fontWeight:page==="myorders"?600:400 }}>我的</button>
             <button onClick={()=>setPage("admin")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, color:page==="admin"?"#111":"#aaa", fontWeight:page==="admin"?600:400 }}>管理</button>
           </div>
         </div>
@@ -509,8 +594,98 @@ export default function App() {
               {dp.cost===0?<div><div style={{ fontSize:9, color:"#bbb", letterSpacing:1, marginBottom:2 }}>PRICE</div><div style={{ fontSize:18, fontWeight:500 }}>仅需邮费</div></div>
               :dSell?<><div><div style={{ fontSize:9, color:"#bbb", letterSpacing:1, marginBottom:2 }}>PRICE</div><div style={{ fontSize:26, fontWeight:600 }}>¥{dSell}</div></div>{dp.tb>0&&<div><div style={{ fontSize:9, color:"#ccc" }}>淘宝</div><div style={{ fontSize:12, color:"#ccc", textDecoration:"line-through" }}>¥{dp.tb}</div></div>}{dDisc&&dDisc>0&&<div style={{ marginLeft:"auto", background:"#111", color:"#fff", padding:"6px 11px", fontSize:12 }}>-{dDisc}%</div>}</>:null}
             </div>
-            <button onClick={()=>setShareTarget(dp)} style={{ width:"100%", padding:"13px 0", background:"#111", border:"none", color:"#faf9f7", fontSize:11, letterSpacing:2, borderRadius:6, cursor:"pointer", marginBottom:8 }}>生成分享图</button>
+            <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:12 }}>
+              <span style={{ fontSize:11, color:"#aaa" }}>数量</span>
+              <button onClick={()=>setDetailQty(q=>Math.max(1,q-1))} style={{ width:32, height:32, border:"1px solid #e0ddd8", background:"#fff", borderRadius:6, cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center" }}>−</button>
+              <span style={{ fontSize:15, fontWeight:500, minWidth:24, textAlign:"center" }}>{detailQty}</span>
+              <button onClick={()=>setDetailQty(q=>q+1)} style={{ width:32, height:32, border:"1px solid #e0ddd8", background:"#fff", borderRadius:6, cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
+              {dSell>0&&<span style={{ marginLeft:"auto", fontSize:13, fontWeight:600 }}>¥{dSell*detailQty}</span>}
+            </div>
+            <button onClick={()=>addToCart(dp.id,detailQty)} style={{ width:"100%", padding:"13px 0", background:addedTip?"#0f6e56":"#111", border:"none", color:"#faf9f7", fontSize:12, letterSpacing:2, borderRadius:6, cursor:"pointer", marginBottom:8, transition:"background 0.3s" }}>{addedTip?"✓ 已加入购物车":"加入购物车"}</button>
+            <button onClick={()=>setShareTarget(dp)} style={{ width:"100%", padding:"11px 0", background:"none", border:"1px solid #e0ddd8", color:"#777", fontSize:11, letterSpacing:1, borderRadius:6, cursor:"pointer" }}>生成分享图</button>
           </div>
+        </div>
+      )}
+
+      {/* ════════ CART ════════ */}
+      {page==="cart"&&(
+        <div style={{ padding:"16px" }}>
+          <div style={{ fontSize:10, letterSpacing:2, color:"#aaa", marginBottom:16 }}>购物车 · {cart.reduce((s,i)=>s+i.qty,0)} 件</div>
+          {cart.length===0&&(
+            <div style={{ textAlign:"center", padding:"60px 0" }}>
+              <div style={{ fontSize:12, color:"#ccc", marginBottom:12 }}>购物车是空的</div>
+              <button onClick={()=>setPage("shop")} style={{ background:"none", border:"1px solid #e0ddd8", padding:"8px 20px", borderRadius:6, cursor:"pointer", fontSize:11, color:"#555" }}>去逛逛</button>
+            </div>
+          )}
+          {cart.map(item=>{const prod=products.find(p=>p.id===item.prodId);if(!prod)return null;const sell=sp(prod);return(
+            <div key={item.prodId} style={{ display:"flex", gap:12, padding:"14px 0", borderBottom:"1px solid #e8e4de" }}>
+              <div onClick={()=>openDetail(prod)} style={{ width:80, height:80, flexShrink:0, overflow:"hidden", background:"#ebe8e3", borderRadius:6, cursor:"pointer" }}>
+                <ImgBox srcs={prod.imgs} alt={prod.n} style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
+              </div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:12, color:"#111", marginBottom:3, lineHeight:1.4, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{prod.n}</div>
+                <div style={{ fontSize:11, color:prod.cost===0?"#0f6e56":"#111", fontWeight:500, marginBottom:8 }}>{prod.cost===0?"仅付邮费":sell?"¥"+sell:""}</div>
+                <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                  <button onClick={()=>updateCartQty(item.prodId,item.qty-1)} style={{ width:28, height:28, border:"1px solid #e0ddd8", background:"#fff", borderRadius:4, cursor:"pointer", fontSize:14, display:"flex", alignItems:"center", justifyContent:"center" }}>−</button>
+                  <span style={{ fontSize:13, minWidth:20, textAlign:"center" }}>{item.qty}</span>
+                  <button onClick={()=>updateCartQty(item.prodId,item.qty+1)} style={{ width:28, height:28, border:"1px solid #e0ddd8", background:"#fff", borderRadius:4, cursor:"pointer", fontSize:14, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
+                  {sell>0&&<span style={{ fontSize:12, color:"#555", marginLeft:4 }}>¥{sell*item.qty}</span>}
+                  <button onClick={()=>removeFromCart(item.prodId)} style={{ marginLeft:"auto", background:"none", border:"none", fontSize:10, color:"#a32d2d", cursor:"pointer" }}>移除</button>
+                </div>
+              </div>
+            </div>
+          );})}
+          {cart.length>0&&(
+            <div style={{ position:"sticky", bottom:0, background:"#faf9f7", borderTop:"1px solid #e8e4de", padding:"14px 0", marginTop:10 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+                <span style={{ fontSize:12, color:"#555" }}>{cart.reduce((s,i)=>s+i.qty,0)} 件商品</span>
+                <span style={{ fontSize:17, fontWeight:600 }}>¥{cart.reduce((s,item)=>{const p=products.find(x=>x.id===item.prodId);return s+(p?(sp(p)||0)*item.qty:0);},0)}</span>
+              </div>
+              <button onClick={()=>setShowCheckout(true)} style={{ width:"100%", padding:"13px 0", background:"#111", border:"none", color:"#faf9f7", fontSize:12, letterSpacing:2, borderRadius:6, cursor:"pointer" }}>去结算</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ════════ MY ORDERS ════════ */}
+      {page==="myorders"&&(
+        <div style={{ padding:"16px" }}>
+          <div style={{ fontSize:10, letterSpacing:2, color:"#aaa", marginBottom:14 }}>我的订单</div>
+          <input value={myWechat} onChange={e=>{setMyWechat(e.target.value);lsSet("yeye_mywx",e.target.value);}} placeholder="输入微信号查询订单" style={{ ...S.input, marginBottom:16 }}/>
+          {(()=>{
+            if(!myWechat) return <div style={{ textAlign:"center", padding:"40px 0", fontSize:12, color:"#ccc" }}>输入微信号查看订单</div>;
+            const myOrders=orders.filter(o=>o.wechat===myWechat);
+            if(myOrders.length===0) return <div style={{ textAlign:"center", padding:"40px 0", fontSize:12, color:"#ccc" }}>暂无订单记录</div>;
+            const groups={};myOrders.forEach(o=>{const g=o.groupId||o.id;if(!groups[g])groups[g]=[];groups[g].push(o);});
+            return Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0])).map(([gid,items])=>{
+              const canCancel=items.every(i=>["pending","paid","ordering"].includes(i.status));
+              const total=items.reduce((s,o)=>{const p=products.find(x=>x.id===o.prodId);return s+(p?(sp(p)||0)*o.qty:0);},0);
+              return(
+                <div key={gid} style={{ background:"#fff", border:S.border, borderRadius:8, marginBottom:12, overflow:"hidden" }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 14px", background:"#f8f7f5", borderBottom:S.border }}>
+                    <span style={{ fontSize:10, color:"#aaa" }}>{items[0].date} {items[0].time}</span>
+                    <StatusBadge status={items[0].status}/>
+                  </div>
+                  {items.map(o=>{const prod=products.find(p=>p.id===o.prodId);return(
+                    <div key={o.id} style={{ display:"flex", gap:10, padding:"10px 14px", borderBottom:"1px solid #f0ede8" }}>
+                      <div style={{ width:50, height:50, flexShrink:0, background:"#ebe8e3", overflow:"hidden", borderRadius:4 }}>
+                        <ImgBox srcs={prod?.imgs} alt={prod?.n||o.prodId} style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
+                      </div>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:12, color:"#333", marginBottom:2 }}>{prod?.n||o.prodId}</div>
+                        <div style={{ fontSize:11, color:"#aaa" }}>×{o.qty} {prod?.cost===0?"邮费":"¥"+((sp(prod)||0)*o.qty)}</div>
+                      </div>
+                      <StatusBadge status={o.status}/>
+                    </div>
+                  );})}
+                  <div style={{ padding:"10px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <span style={{ fontSize:12, fontWeight:600 }}>{total>0?"合计 ¥"+total:"仅付邮费"}</span>
+                    {canCancel&&<button onClick={()=>cancelGroup(gid)} style={{ padding:"6px 14px", background:"#fcebeb", border:"none", fontSize:10, color:"#a32d2d", borderRadius:4, cursor:"pointer" }}>取消订单</button>}
+                  </div>
+                </div>
+              );
+            });
+          })()}
         </div>
       )}
 
@@ -535,17 +710,31 @@ export default function App() {
               {dbMode&&<div style={{ fontSize:9, color:"#0f6e56", marginBottom:12, padding:"4px 8px", background:"#e1f5ee", borderRadius:4, display:"inline-block" }}>已连接 Supabase · 数据实时同步</div>}
               {!dbMode&&<div style={{ fontSize:9, color:"#854f0b", marginBottom:12, padding:"4px 8px", background:"#faeeda", borderRadius:4, display:"inline-block" }}>本地模式 · 配置 .env 连接数据库</div>}
 
+              {/* FILTER BAR (shared by kanban & orders) */}
+              {(adminTab==="kanban"||adminTab==="orders")&&(
+                <div style={{ display:"flex", gap:8, marginBottom:12, flexWrap:"wrap" }}>
+                  <input value={orderWxFilter} onChange={e=>setOrderWxFilter(e.target.value)} placeholder="按微信号过滤" style={{ flex:1, minWidth:100, padding:"7px 10px", border:"1px solid #e0ddd8", borderRadius:6, fontSize:11, background:"#fff", boxSizing:"border-box" }}/>
+                  <select value={orderProdFilter} onChange={e=>setOrderProdFilter(e.target.value)} style={{ flex:1, minWidth:100, padding:"7px 10px", border:"1px solid #e0ddd8", borderRadius:6, fontSize:11, background:"#fff" }}>
+                    <option value="">全部商品</option>
+                    {products.map(p=><option key={p.id} value={p.id}>{p.n}</option>)}
+                  </select>
+                </div>
+              )}
+
               {/* KANBAN */}
-              {adminTab==="kanban"&&(
+              {adminTab==="kanban"&&(()=>{
+                const fo=orders.filter(o=>{if(orderWxFilter&&!o.wechat.includes(orderWxFilter))return false;if(orderProdFilter&&o.prodId!==orderProdFilter)return false;return true;});
+                const cols=STATUSES.map(s=>({status:s,items:fo.filter(o=>o.status===s)}));
+                return(
                 <div>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-                    <span style={{ fontSize:11, color:"#aaa", letterSpacing:1 }}>{orders.length} 笔订单</span>
+                    <span style={{ fontSize:11, color:"#aaa", letterSpacing:1 }}>{fo.length} 笔订单</span>
                     <button onClick={()=>setEditOrder("new")} style={{ padding:"7px 14px", background:"#111", border:"none", color:"#faf9f7", fontSize:11, borderRadius:6, cursor:"pointer" }}>+ 新增订单</button>
                   </div>
                   <div style={{ overflowX:"auto", paddingBottom:8 }}>
-                    <div style={{ display:"flex", gap:10, minWidth:Math.max(500,STATUSES.length*150) }}>
-                      {kanbanCols.map(col=>(
-                        <div key={col.status} style={{ minWidth:148, flex:1 }}>
+                    <div style={{ display:"flex", gap:10, minWidth:Math.max(500,STATUSES.length*140) }}>
+                      {cols.map(col=>(
+                        <div key={col.status} style={{ minWidth:140, flex:1 }}>
                           <div style={{ padding:"6px 8px", background:STATUS_CONFIG[col.status].bg, marginBottom:8, display:"flex", justifyContent:"space-between", alignItems:"center", borderRadius:4 }}>
                             <span style={{ fontSize:10, fontWeight:600, color:STATUS_CONFIG[col.status].color }}>{STATUS_CONFIG[col.status].label}</span>
                             <span style={{ fontSize:9, color:STATUS_CONFIG[col.status].color, opacity:0.7 }}>{col.items.length}</span>
@@ -556,8 +745,8 @@ export default function App() {
                                 <span style={{ fontSize:10, fontWeight:600, color:"#111" }}>{o.name}</span>
                                 <span style={{ fontSize:9, color:"#bbb" }}>{o.date}</span>
                               </div>
-                              <div style={{ fontSize:10, color:"#555", marginBottom:5, lineHeight:1.5 }}>{prod?.n?.slice(0,20)||o.prodId} ×{o.qty}</div>
-                              <div style={{ fontSize:10, color:"#aaa", marginBottom:6 }}>{o.wechat}</div>
+                              <div style={{ fontSize:10, color:"#555", marginBottom:4, lineHeight:1.5 }}>{prod?.n?.slice(0,20)||o.prodId} ×{o.qty}</div>
+                              <div style={{ fontSize:9, color:"#aaa", marginBottom:4 }}>{o.wechat}{o.groupId&&<span style={{ marginLeft:4, color:"#ccc" }}>#{o.groupId}</span>}</div>
                               <div style={{ display:"flex", flexWrap:"wrap", gap:3, marginBottom:5 }}>
                                 {STATUSES.filter(s=>s!==o.status).map(s=>(<button key={s} onClick={()=>updateStatus(o.id,s)} style={{ fontSize:8, padding:"2px 5px", background:STATUS_CONFIG[s].bg, color:STATUS_CONFIG[s].color, border:"none", borderRadius:2, cursor:"pointer" }}>→{STATUS_CONFIG[s].label}</button>))}
                               </div>
@@ -571,47 +760,68 @@ export default function App() {
                       ))}
                     </div>
                   </div>
-                </div>
-              )}
+                </div>);
+              })()}
 
-              {/* ORDERS */}
-              {adminTab==="orders"&&(
+              {/* ORDERS (grouped) */}
+              {adminTab==="orders"&&(()=>{
+                const fo=orders.filter(o=>{if(orderWxFilter&&!o.wechat.includes(orderWxFilter))return false;if(orderProdFilter&&o.prodId!==orderProdFilter)return false;return true;});
+                const groups={};fo.forEach(o=>{const g=o.groupId||o.id;if(!groups[g])groups[g]=[];groups[g].push(o);});
+                const groupList=Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0]));
+                return(
                 <div>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-                    <span style={{ fontSize:11, color:"#aaa" }}>{orders.length} 笔</span>
+                    <span style={{ fontSize:11, color:"#aaa" }}>{fo.length} 笔 · {groupList.length} 单</span>
                     <button onClick={()=>setEditOrder("new")} style={{ padding:"7px 14px", background:"#111", border:"none", color:"#faf9f7", fontSize:11, borderRadius:6, cursor:"pointer" }}>+ 新增订单</button>
                   </div>
-                  {orders.length===0&&<div style={{ textAlign:"center", padding:"40px 0", fontSize:11, color:"#ccc" }}>暂无订单</div>}
-                  {orders.map(o=>{const prod=products.find(p=>p.id===o.prodId);return(
-                    <div key={o.id} style={{ background:"#fff", border:S.border, padding:"13px", marginBottom:10, borderRadius:6 }}>
-                      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-                        <div style={{ display:"flex", gap:6, alignItems:"center" }}><span style={{ fontSize:10, color:"#aaa" }}>{o.id}</span><StatusBadge status={o.status}/></div>
-                        <span style={{ fontSize:13, fontWeight:600 }}>{o.paidAmt>0?`¥${o.paidAmt}`:(prod&&sp(prod)?`¥${(sp(prod)||0)*o.qty}`:"邮费")}</span>
+                  {groupList.length===0&&<div style={{ textAlign:"center", padding:"40px 0", fontSize:11, color:"#ccc" }}>暂无订单</div>}
+                  {groupList.map(([gid,items])=>{
+                    const allPending=items.every(i=>i.status==="pending");
+                    const hasPaid=items.some(i=>i.status==="paid");
+                    const total=items.reduce((s,o)=>{const p=products.find(x=>x.id===o.prodId);return s+(p?(sp(p)||0)*o.qty:0);},0);
+                    const info=items[0];
+                    return(
+                    <div key={gid} style={{ background:"#fff", border:S.border, borderRadius:8, marginBottom:12, overflow:"hidden" }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 14px", background:"#f8f7f5", borderBottom:S.border }}>
+                        <div><span style={{ fontSize:10, color:"#aaa" }}>#{gid}</span><span style={{ fontSize:10, color:"#555", marginLeft:8 }}>{info.date} {info.time}</span></div>
+                        <StatusBadge status={info.status}/>
                       </div>
-                      <div style={{ fontSize:11, color:"#555", background:"#f8f7f5", padding:"8px 10px", marginBottom:9, lineHeight:1.7, borderRadius:4 }}>{prod?.n||o.prodId} × {o.qty}件</div>
-                      {[["微信",o.wechat,o.id+"wx"],["姓名",o.name,o.id+"nm"],["电话",o.phone||"—",o.id+"ph"],["地址",o.addr,o.id+"ad"],...(o.note?[["备注",o.note,o.id+"nt"]]:[])].map(([l,v,k])=>(
-                        <div key={l} style={{ display:"flex", alignItems:"center", gap:8, padding:"7px 0", borderBottom:"1px solid #f0ede8" }}>
-                          <span style={{ fontSize:9, color:"#ccc", minWidth:24 }}>{l}</span>
-                          <span style={{ fontSize:12, flex:1, wordBreak:"break-all" }}>{v}</span>
-                          <button onClick={()=>cp(v,k)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:9, color:copied===k?"#0f6e56":"#bbb", fontWeight:copied===k?600:400 }}>{copied===k?"✓":"复制"}</button>
+                      <div style={{ padding:"8px 14px", borderBottom:"1px solid #f0ede8" }}>
+                        <div style={{ display:"flex", flexWrap:"wrap", gap:6, fontSize:11, color:"#555" }}>
+                          <span style={{ cursor:"pointer" }} onClick={()=>cp(info.wechat,gid+"wx")}>{copied===gid+"wx"?"✓ 已复制":"微信: "+info.wechat}</span>
+                          <span>|</span><span>{info.name} {info.phone}</span>
                         </div>
-                      ))}
-                      <div style={{ display:"flex", flexWrap:"wrap", gap:5, margin:"9px 0 8px" }}>
-                        {STATUSES.map(s=>(<button key={s} onClick={()=>updateStatus(o.id,s)} style={{ fontSize:9, padding:"3px 8px", border:"1px solid", borderColor:o.status===s?"#111":"#e0ddd8", background:o.status===s?"#111":"#fff", color:o.status===s?"#fff":"#777", borderRadius:3, cursor:"pointer" }}>{STATUS_CONFIG[s].label}</button>))}
+                        <div style={{ fontSize:11, color:"#777", marginTop:4, wordBreak:"break-all" }}>{info.addr}</div>
+                        {info.note&&<div style={{ fontSize:10, color:"#aaa", marginTop:3 }}>备注: {info.note}</div>}
                       </div>
-                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:6 }}>
-                        {[["全部信息",`${o.name} ${o.phone||""}\n${o.addr}\n微信:${o.wechat}\n${prod?.n||o.prodId}×${o.qty}\n金额:${o.paidAmt||"邮费"}${o.note?"\n备注:"+o.note:""}`,o.id+"all"],["仅地址",o.addr,o.id+"a2"],["姓名+电话",`${o.name} ${o.phone}`,o.id+"np"]].map(([l,v,k])=>(
-                          <button key={k} onClick={()=>cp(v,k)} style={{ padding:"7px 0", background:copied===k?"#111":"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", color:copied===k?"#fff":"#777", borderRadius:4 }}>{copied===k?"✓":l}</button>
-                        ))}
+                      {items.map(o=>{const prod=products.find(p=>p.id===o.prodId);return(
+                        <div key={o.id} style={{ display:"flex", gap:10, padding:"9px 14px", borderBottom:"1px solid #f0ede8", alignItems:"center" }}>
+                          <div style={{ width:40, height:40, flexShrink:0, background:"#ebe8e3", overflow:"hidden", borderRadius:4 }}>
+                            <ImgBox srcs={prod?.imgs} alt={prod?.n||o.prodId} style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
+                          </div>
+                          <div style={{ flex:1 }}>
+                            <div style={{ fontSize:11, color:"#333" }}>{prod?.n||o.prodId}</div>
+                            <div style={{ fontSize:10, color:"#aaa" }}>×{o.qty} {prod?.cost===0?"邮费":"¥"+((sp(prod)||0)*o.qty)}</div>
+                          </div>
+                          <StatusBadge status={o.status}/>
+                          <div style={{ display:"flex", gap:2, flexShrink:0 }}>
+                            {STATUSES.filter(s=>s!==o.status&&s!=="cancelled").slice(0,3).map(s=>(<button key={s} onClick={()=>updateStatus(o.id,s)} style={{ fontSize:8, padding:"2px 5px", background:STATUS_CONFIG[s].bg, color:STATUS_CONFIG[s].color, border:"none", borderRadius:2, cursor:"pointer" }}>→{STATUS_CONFIG[s].label}</button>))}
+                          </div>
+                        </div>
+                      );})}
+                      <div style={{ padding:"10px 14px", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:6 }}>
+                        <span style={{ fontSize:12, fontWeight:600 }}>{total>0?"合计 ¥"+total:"仅付邮费"}</span>
+                        <div style={{ display:"flex", gap:6 }}>
+                          <button onClick={()=>{const txt=`${info.name} ${info.phone||""}\n${info.addr}\n微信:${info.wechat}\n${items.map(o=>{const p=products.find(x=>x.id===o.prodId);return(p?.n||o.prodId)+"×"+o.qty;}).join("、")}\n合计:¥${total||"邮费"}`;cp(txt,gid+"all");}} style={{ padding:"5px 10px", background:copied===gid+"all"?"#111":"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", color:copied===gid+"all"?"#fff":"#555", borderRadius:4 }}>{copied===gid+"all"?"✓":"复制全部"}</button>
+                          <button onClick={()=>cp(info.addr,gid+"ad")} style={{ padding:"5px 10px", background:copied===gid+"ad"?"#111":"#f5f3f0", border:"none", fontSize:9, cursor:"pointer", color:copied===gid+"ad"?"#fff":"#555", borderRadius:4 }}>{copied===gid+"ad"?"✓":"复制地址"}</button>
+                          {hasPaid&&<button onClick={()=>markGroupShipped(gid)} style={{ padding:"5px 10px", background:"#eaf3de", border:"none", fontSize:9, cursor:"pointer", color:"#3b6d11", borderRadius:4, fontWeight:600 }}>已支付→发货</button>}
+                          {allPending&&<button onClick={()=>cancelGroup(gid)} style={{ padding:"5px 10px", background:"#fcebeb", border:"none", fontSize:9, cursor:"pointer", color:"#a32d2d", borderRadius:4 }}>取消订单</button>}
+                        </div>
                       </div>
-                      <div style={{ display:"flex", gap:6, marginTop:8 }}>
-                        <button onClick={()=>setEditOrder(o)} style={{ flex:1, padding:"7px 0", background:"#f5f3f0", border:"none", fontSize:10, cursor:"pointer", color:"#555", borderRadius:4 }}>编辑</button>
-                        <button onClick={()=>deleteOrder(o.id)} style={{ padding:"7px 12px", background:"#fcebeb", border:"none", fontSize:10, cursor:"pointer", color:"#a32d2d", borderRadius:4 }}>删除</button>
-                      </div>
-                    </div>
-                  );})}
-                </div>
-              )}
+                    </div>);
+                  })}
+                </div>);
+              })()}
 
               {/* PRODUCTS */}
               {adminTab==="products"&&(
