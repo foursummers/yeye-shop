@@ -3,6 +3,8 @@ import { PRODUCTS as RAW_PRODUCTS } from "./data/products";
 import { supabase, uploadImage } from "./lib/supabase";
 
 const MARGIN = 1.38;
+const ADMIN_HASH = "19dcc6013b6683a7b8d74a07bceaa774860032470eb978c49fd323050707cad9";
+async function sha256(msg){const d=new TextEncoder().encode(msg);const h=await crypto.subtle.digest("SHA-256",d);return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");};
 const sp = p => p.cost > 0 ? Math.round(p.cost * MARGIN) : null;
 const dc = p => { const s = sp(p); return s && p.tb > 0 ? Math.round((1 - s / p.tb) * 100) : null; };
 
@@ -283,16 +285,15 @@ export default function App() {
     (async () => {
       if (supabase) {
         try {
-          const { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
+          let { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
           if (pErr) throw pErr;
           if (pRows.length === 0) {
             const seedDb = SEED_PRODUCTS.map(productToDb);
-            const { error: sErr } = await supabase.from("products").insert(seedDb);
-            if (sErr) throw sErr;
-            setProducts(SEED_PRODUCTS);
-          } else {
-            setProducts(pRows.map(dbToProduct));
+            await supabase.from("products").upsert(seedDb, { onConflict: "id" });
+            const { data: refetch } = await supabase.from("products").select("*").order("created_at");
+            pRows = refetch || [];
           }
+          setProducts(pRows.map(dbToProduct));
           const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
           if (oErr) throw oErr;
           setOrders(oRows.map(dbToOrder));
@@ -519,9 +520,8 @@ export default function App() {
           {!adminOk?(
             <div style={{ textAlign:"center", paddingTop:50 }}>
               <div style={{ fontSize:10, letterSpacing:3, color:"#aaa", marginBottom:20 }}>ADMIN</div>
-              <input type="password" placeholder="输入密码" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&pw==="admin888"&&setAdminOk(true)} style={{ ...S.input, width:"70%", textAlign:"center", marginBottom:12 }}/>
-              <br/><button onClick={()=>{if(pw==="admin888")setAdminOk(true);}} style={{ padding:"11px 28px", background:"#111", border:"none", color:"#faf9f7", fontSize:11, letterSpacing:2, borderRadius:6, cursor:"pointer" }}>进入</button>
-              <div style={{ fontSize:10, color:"#ccc", marginTop:10 }}>密码: admin888</div>
+              <input type="password" placeholder="输入密码" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={async e=>{if(e.key==="Enter"&&await sha256(pw)===ADMIN_HASH)setAdminOk(true);}} style={{ ...S.input, width:"70%", textAlign:"center", marginBottom:12 }}/>
+              <br/><button onClick={async()=>{if(await sha256(pw)===ADMIN_HASH)setAdminOk(true);}} style={{ padding:"11px 28px", background:"#111", border:"none", color:"#faf9f7", fontSize:11, letterSpacing:2, borderRadius:6, cursor:"pointer" }}>进入</button>
             </div>
           ):(
             <>
