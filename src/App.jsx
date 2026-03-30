@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { PRODUCTS as SEED_PRODUCTS } from "./data/products";
-import { supabase, uploadImage, makeClient, SUPABASE_URL, SUPABASE_KEY } from "./lib/supabase";
+import { supabase, uploadImage, makeClient, cacheConfig, clearCachedConfig, SUPABASE_URL, SUPABASE_KEY } from "./lib/supabase";
 
 const MARGIN = 1.38;
 const ADMIN_HASH = "19dcc6013b6683a7b8d74a07bceaa774860032470eb978c49fd323050707cad9";
@@ -334,47 +334,50 @@ export default function App() {
   const [settingsUrl, setSettingsUrl] = useState("");
   const [diagResult, setDiagResult] = useState(null);
   const [syncStatus, setSyncStatus] = useState(null);
+  const reconnectRef = useRef(null);
   const scrollPos = useRef(0);
 
-  async function loadFromSupabase() {
-    if (!supabase) {
-      setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
-      setOrders(lsGet("yeye_o", []));
-      setLoading(false);
-      setConnError("env");
-      return;
+  function getDb() { return runtimeDb || supabase; }
+
+  async function loadFromDb(silent) {
+    const client = getDb();
+    if (!client) {
+      if (!silent) {
+        setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
+        setOrders(lsGet("yeye_o", []));
+        setLoading(false);
+      }
+      return false;
     }
-    setConnError(null);
-    let pOk = false, oOk = false, errMsg = "";
+    let pOk = false, oOk = false;
     try {
-      const { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
+      const { data: pRows, error: pErr } = await client.from("products").select("*").order("created_at");
       if (pErr) throw pErr;
-      if (pRows.length === 0) {
+      if (pRows.length === 0 && !silent) {
         const seedDb = SEED_PRODUCTS.map(productToDb);
-        const { error: seedErr } = await supabase.from("products").upsert(seedDb, { onConflict: "id" });
-        if (seedErr) console.warn("[yeye] seed:", seedErr.message);
-        const { data: refetch } = await supabase.from("products").select("*").order("created_at");
+        await client.from("products").upsert(seedDb, { onConflict: "id" }).catch(()=>{});
+        const { data: refetch } = await client.from("products").select("*").order("created_at");
         setProducts((refetch||[]).map(dbToProduct));
       } else {
         setProducts(pRows.map(dbToProduct));
       }
       pOk = true;
     } catch (e) {
-      errMsg += "商品: " + e.message + "; ";
-      setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
+      if (!silent) setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
     }
     try {
-      const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
+      const { data: oRows, error: oErr } = await client.from("orders").select("*").order("created_at", { ascending: false });
       if (oErr) throw oErr;
       setOrders(oRows.map(dbToOrder));
       oOk = true;
     } catch (e) {
-      errMsg += "订单: " + e.message;
-      setOrders(lsGet("yeye_o", []));
+      if (!silent) setOrders(lsGet("yeye_o", []));
     }
-    setDbMode(pOk || oOk);
-    if (!pOk && !oOk) setConnError(errMsg || "unknown");
-    setLoading(false);
+    const ok = pOk || oOk;
+    setDbMode(ok);
+    if (ok) setConnError(null);
+    if (!silent) setLoading(false);
+    return ok;
   }
 
   // ── API Key Diagnostics ─────────────────────────────────
@@ -448,7 +451,8 @@ export default function App() {
     if (allOk) {
       const client = makeClient(url, key);
       setRuntimeDb(client);
-      setSyncStatus({ text: "✓ Key 验证通过，已切换到新连接", color: "#0f6e56" });
+      cacheConfig(url, key);
+      setSyncStatus({ text: "✓ Key 已缓存并切换到新连接", color: "#0f6e56" });
       try {
         const { data: pRows, error: pErr } = await client.from("products").select("*").order("created_at");
         if (!pErr && pRows) { setProducts(pRows.map(dbToProduct)); }
@@ -456,7 +460,7 @@ export default function App() {
         if (!oErr && oRows) { setOrders(oRows.map(dbToOrder)); }
         setDbMode(true);
         setConnError(null);
-        setSyncStatus({ text: "✓ 已连接并加载云端数据", color: "#0f6e56" });
+        setSyncStatus({ text: "✓ 已连接并加载云端数据（Key 已缓存）", color: "#0f6e56" });
       } catch (e) {
         setSyncStatus({ text: "Key 有效但加载数据失败: " + e.message, color: "#a32d2d" });
       }
@@ -466,7 +470,7 @@ export default function App() {
   }
 
   async function uploadLocalToCloud() {
-    const client = runtimeDb || supabase;
+    const client = getDb();
     if (!client) return alert("请先配置有效的 Supabase 连接");
     if (!confirm(`确认上传本地数据到云端？\n商品: ${products.length} 件\n订单: ${orders.length} 笔\n\n⚠ 这将覆盖云端同 ID 的数据`)) return;
     setSyncStatus({ text: "正在上传商品数据...", color: "#854f0b" });
@@ -496,7 +500,7 @@ export default function App() {
   }
 
   async function pullFromCloud() {
-    const client = runtimeDb || supabase;
+    const client = getDb();
     if (!client) return alert("请先配置有效的 Supabase 连接");
     setSyncStatus({ text: "正在从云端拉取...", color: "#854f0b" });
     try {
@@ -514,8 +518,15 @@ export default function App() {
     }
   }
 
-  // ── Load data on mount ───────────────────────────────────
-  useEffect(() => { loadFromSupabase(); }, []);
+  // ── Load data on mount + auto-reconnect ─────────────────
+  useEffect(() => {
+    loadFromDb(false);
+    reconnectRef.current = setInterval(async () => {
+      if (!getDb()) return;
+      try { await loadFromDb(true); } catch {}
+    }, 180000);
+    return () => { if (reconnectRef.current) clearInterval(reconnectRef.current); };
+  }, []);
 
   // ── Sync to localStorage when not using DB ────────────────
   useEffect(() => { if (!dbMode && !loading) { lsSet("yeye_p3", products); } }, [products, dbMode, loading]);
@@ -567,7 +578,7 @@ export default function App() {
     if(db) await db.from("orders").update({status:"shipped"}).eq("group_id",groupId).eq("status","paid");
   }
 
-  const db = runtimeDb || supabase;
+  const db = getDb();
 
   // ── Product CRUD ──────────────────────────────────────────
   async function saveProduct(form) {
@@ -675,16 +686,12 @@ export default function App() {
   return (
     <div style={{ fontFamily:"system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif", minHeight:"100vh", background:S.bg, maxWidth:500, margin:"0 auto" }}>
 
-      {connError&&!loading&&(
+      {connError&&!loading&&adminOk&&(
         <div style={{ position:"fixed", top:0, left:0, right:0, zIndex:400, background:"#fcebeb", borderBottom:"2px solid #f5c6cb", padding:"10px 16px", maxWidth:500, margin:"0 auto" }}>
-          <div style={{ fontSize:11, color:"#a32d2d", fontWeight:600, marginBottom:4 }}>⚠ 数据库连接失败（数据仅保存在本地）</div>
-          {connError==="env"?(
-            <div style={{ fontSize:10, color:"#854f0b" }}>VITE_SUPABASE_URL 或 VITE_SUPABASE_ANON_KEY 未配置</div>
-          ):(
-            <div style={{ fontSize:10, color:"#666", wordBreak:"break-all" }}>错误: {connError}</div>
-          )}
+          <div style={{ fontSize:11, color:"#a32d2d", fontWeight:600, marginBottom:4 }}>⚠ 数据库连接异常</div>
+          <div style={{ fontSize:10, color:"#666", wordBreak:"break-all" }}>{connError==="env"?"环境变量未配置，使用内置 Key 连接":connError}</div>
           <div style={{ display:"flex", gap:6, marginTop:6 }}>
-            <button onClick={()=>{setLoading(true);setConnError(null);loadFromSupabase();}} style={{ fontSize:10, padding:"4px 10px", background:"#a32d2d", color:"#fff", border:"none", borderRadius:3, cursor:"pointer" }}>重试连接</button>
+            <button onClick={()=>{setLoading(true);setConnError(null);loadFromDb(false);}} style={{ fontSize:10, padding:"4px 10px", background:"#a32d2d", color:"#fff", border:"none", borderRadius:3, cursor:"pointer" }}>重试</button>
             <button onClick={()=>setConnError(null)} style={{ fontSize:10, padding:"4px 10px", background:"#fff", color:"#999", border:"1px solid #ddd", borderRadius:3, cursor:"pointer" }}>忽略</button>
           </div>
         </div>
@@ -1070,11 +1077,13 @@ export default function App() {
                     </div>
                     <div style={{ fontSize:10, color:"#aaa", lineHeight:1.6 }}>
                       <div>本地商品: {products.length} 件 · 订单: {orders.length} 笔</div>
-                      <div>ENV URL: {SUPABASE_URL ? SUPABASE_URL.slice(0,35)+"..." : "未设置"}</div>
-                      <div>ENV Key: {SUPABASE_KEY ? SUPABASE_KEY.slice(0,15)+"..." : "未设置"}</div>
+                      <div>URL: {SUPABASE_URL ? SUPABASE_URL.slice(0,40)+"..." : "未设置"}</div>
+                      <div>Key: {SUPABASE_KEY ? SUPABASE_KEY.slice(0,20)+"..." : "未设置"}</div>
                       {runtimeDb&&<div style={{ color:"#0f6e56" }}>✓ 正在使用手动配置的连接</div>}
+                      <div>自动重连: 每3分钟</div>
                     </div>
                     {syncStatus&&<div style={{ fontSize:10, color:syncStatus.color, marginTop:8, padding:"6px 10px", background:syncStatus.color==="#0f6e56"?"#e1f5ee":syncStatus.color==="#a32d2d"?"#fcebeb":"#faeeda", borderRadius:4 }}>{syncStatus.text}</div>}
+                    <button onClick={()=>{clearCachedConfig();setSyncStatus({text:"已清除缓存 Key，刷新后将使用 ENV 配置",color:"#854f0b"});}} style={{ marginTop:8, fontSize:9, padding:"4px 10px", background:"#f5f3f0", border:"1px solid #e0ddd8", borderRadius:4, cursor:"pointer", color:"#999" }}>清除缓存的 Key</button>
                   </div>
 
                   {/* Data Sync */}
