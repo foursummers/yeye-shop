@@ -1,133 +1,2191 @@
-// Auto-synced from Supabase 2026-03-29
+// Auto-synced from Supabase 2026-03-30
 export const PRODUCTS = [
-  {"id":"PGW212G01","n":"长毛绒蛋壳棉垫 浅灰","cat":"宠物用品","cost":0,"tb":159,"st":142,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10067.jpg","/images/10068.jpg"],"desc":"浅灰长毛绒面料，蛋壳棉填充支撑，防滑底部，可机洗（95×60×8 cm）","recommended":false,"hidden":false},
-  {"id":"PGW212G02","n":"长毛绒蛋壳棉垫 深灰","cat":"宠物用品","cost":0,"tb":159,"st":107,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10068.jpg"],"desc":"深灰长毛绒面料，蛋壳棉填充支撑，防滑底部，可机洗（95×60×8 cm）","recommended":false,"hidden":false},
-  {"id":"PGW213G01","n":"长毛绒蛋壳棉垫 浅灰 大号","cat":"宠物用品","cost":0,"tb":199,"st":130,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10118.jpg"],"desc":"浅灰长毛绒面料，蛋壳棉填充，110x73cm大尺寸，适合中大型犬（110×73×10 cm）","recommended":false,"hidden":false},
-  {"id":"PGW213G02","n":"长毛绒蛋壳棉垫 深灰 大号","cat":"宠物用品","cost":0,"tb":199,"st":39,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":[],"desc":"深灰长毛绒面料，蛋壳棉填充，110x73cm大尺寸（110×73×10 cm）","recommended":false,"hidden":false},
-  {"id":"PGW214G02","n":"长毛绒蛋壳棉垫 深灰 超大号","cat":"宠物用品","cost":0,"tb":239,"st":287,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":[],"desc":"深灰长毛绒面料，蛋壳棉填充，122x74cm超大尺寸，大型犬专属（122×74×10 cm）","recommended":false,"hidden":false},
-  {"id":"PGW222R01","n":"长毛绒宠物沙发垫 粉色","cat":"宠物用品","cost":0,"tb":219,"st":331,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10074.jpg"],"desc":"粉嫩长毛绒沙发款，带靠背围边设计，超高颜值宠物专区（95×85×16 cm）","recommended":false,"hidden":false},
-  {"id":"PGW067G01","n":"麂皮绒菠萝格方形沙发垫 深灰","cat":"宠物用品","cost":0,"tb":199,"st":42,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10047.jpg","/images/10080.jpg","/images/10105.jpg"],"desc":"深灰麂皮绒面料，菠萝格方形设计，厚实填充，大型犬专属（91×71×25 cm）","recommended":false,"hidden":false},
-  {"id":"PDC003B0124","n":"八片牛津布宠物围栏","cat":"宠物用品","cost":0,"tb":199,"st":219,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10059.jpg"],"desc":"八片加固牛津布，稳固防逃脱，折叠收纳方便，适合中大型犬（112×112×62 cm）","recommended":false,"hidden":false},
-  {"id":"LPC005W01","n":"透明塑料DIY组合围栏","cat":"宠物用品","cost":0,"tb":199,"st":181,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10075.png","/images/10076.jpg"],"desc":"透明面板通透，可自由拼接DIY尺寸，适合兔子/豚鼠/小猫（143×73×91 cm）","recommended":false,"hidden":false},
-  {"id":"PDC090G02XXL","n":"XXL烟灰色牛津布宠物笼","cat":"宠物用品","cost":36,"tb":189,"st":26,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10079.jpg"],"desc":"XXL超大宠物笼，烟灰色牛津布，坚固耐用，便于折叠（91×63×63 cm）","recommended":false,"hidden":false},
-  {"id":"PDC90G01XXL","n":"XXL灰色牛津布宠物笼","cat":"宠物用品","cost":36,"tb":189,"st":30,"loc":"国内仓","note":"","season":"Q1 2025","imgs":["/images/10058.jpg"],"desc":"XXL超大宠物笼，灰色牛津布，坚固耐用，国内仓现货（91×63.7×63.7 cm）","recommended":false,"hidden":false},
-  {"id":"PCT40W","n":"扇形楼梯猫爬架 95cm","cat":"猫爬架","cost":32,"tb":168,"st":31,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10044.jpg"],"desc":"扇形楼梯设计，小巧不占地，95cm适合小空间（49×49×95 cm）","recommended":false,"hidden":false},
-  {"id":"PCT614P01","n":"高果粉色猫爬架 101cm","cat":"猫爬架","cost":46,"tb":239,"st":41,"loc":"国内仓","note":"需拼装","season":"Q1 2025","imgs":["/images/10052.jpg","/images/10056.jpg"],"desc":"粉色高颜值猫爬架，101cm高度，国内仓现货（68×48×101 cm）","recommended":false,"hidden":false},
-  {"id":"PCT144W01M","n":"实木白毛绒猫爬架 123cm","cat":"猫爬架","cost":46,"tb":299,"st":21,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10051.jpg","/images/10106.jpg"],"desc":"实木白毛绒猫爬架，123cm，品质感强（68×43×123 cm）","recommended":false,"hidden":false},
-  {"id":"PCT166G03L","n":"雾茶灰猫爬架 165cm","cat":"猫爬架","cost":46,"tb":359,"st":18,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10048.jpg"],"desc":"雾茶灰高端配色，165cm超高猫爬架（58×40×165 cm）","recommended":false,"hidden":false},
-  {"id":"PCT85W","n":"浅灰色双顶台猫爬架 153cm","cat":"猫爬架","cost":47,"tb":329,"st":13,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10043.jpg"],"desc":"浅灰色双顶台设计，153cm，多猫家庭首选（60×52×153 cm）","recommended":false,"hidden":false},
-  {"id":"PCT90G","n":"全剑麻双猫窝爬架 烟灰 156cm","cat":"猫爬架","cost":50,"tb":399,"st":39,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10041.png","/images/10078.jpg"],"desc":"全剑麻材质，双猫窝设计，烟灰色，156cm（60×50×156 cm）","recommended":false,"hidden":false},
-  {"id":"PCT90M","n":"全剑麻双猫窝爬架 米色 156cm","cat":"猫爬架","cost":50,"tb":399,"st":125,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10054.jpg","/images/10107.png"],"desc":"全剑麻材质，双猫窝设计，米色温馨，156cm（60×50×156 cm）","recommended":false,"hidden":false},
-  {"id":"PCT90W","n":"全剑麻双猫窝爬架 浅灰 156cm","cat":"猫爬架","cost":50,"tb":399,"st":33,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10055.jpg"],"desc":"全剑麻材质，双猫窝设计，浅灰色，156cm（60×50×156 cm）","recommended":false,"hidden":false},
-  {"id":"PCT99W","n":"带喂食器猫爬架 浅灰 170cm","cat":"猫爬架","cost":50,"tb":429,"st":87,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10049.jpg"],"desc":"自带喂食器，浅灰色，超大170cm猫爬架（174×90×92 cm）","recommended":false,"hidden":false},
-  {"id":"PCT99G","n":"带喂食器猫爬架 烟灰 170cm","cat":"猫爬架","cost":50,"tb":429,"st":53,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10050.jpg"],"desc":"自带喂食器，烟灰色，超大170cm猫爬架（174×90×92 cm）","recommended":false,"hidden":false},
-  {"id":"PCL111G01M","n":"猫砂箱爬架二合一 象牙色 115cm","cat":"猫爬架","cost":48,"tb":389,"st":53,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10077.jpg"],"desc":"猫砂箱+爬架二合一，象牙色，节省空间（52×52×115 cm）","recommended":false,"hidden":false},
-  {"id":"LCB209Q11","n":"布艺洗衣袋 90L 深蓝","cat":"脏衣篮","cost":10,"tb":39,"st":16,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10042.jpg"],"desc":"深蓝配色，90L超大容量，可折叠，轻便实用（40×35×65 cm / 90L）","recommended":false,"hidden":false},
-  {"id":"RLH090G01","n":"棉布圆桶脏衣篮 90L 静谧灰","cat":"脏衣篮","cost":14,"tb":55,"st":163,"loc":"国内仓","note":"","season":"Q1 2025","imgs":["/images/10126.jpg","/images/10117.jpg"],"desc":"棉布圆桶设计，静谧灰配色，国内仓现货（50×50×46 cm / 90L）","recommended":false,"hidden":false},
-  {"id":"LCB002G02","n":"仿麻布双筒脏衣篮 深灰 142L","cat":"脏衣篮","cost":29,"tb":119,"st":153,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10108.jpg"],"desc":"仿麻布双筒设计，深灰配色，142L超大容量（60×36×66 cm / 142L）","recommended":false,"hidden":false},
-  {"id":"LCB02BK","n":"仿麻布双筒脏衣篮 黑色","cat":"脏衣篮","cost":34,"tb":129,"st":99,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"仿麻布双筒设计，黑色百搭（36×60×66 cm）","recommended":false,"hidden":false},
-  {"id":"LCB534BH01","n":"竹布四桶脏衣篮 225L 烟墨黑","cat":"脏衣篮","cost":32,"tb":149,"st":26,"loc":"国内仓","note":"","season":"Q1 2025","imgs":["/images/10099.png"],"desc":"竹布四桶设计，225L超大容量，烟墨黑配色，国内仓现货（78×38×75 cm / 225L）","recommended":false,"hidden":false},
-  {"id":"LCB290B11","n":"铁布藤编脏衣篮 单桶 90L 黑灰","cat":"脏衣篮","cost":53,"tb":199,"st":16,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10098.jpg"],"desc":"铁布藤编工艺，单桶90L，黑灰色（46×33×60 cm / 90L）","recommended":false,"hidden":false},
-  {"id":"LCB602G01","n":"特斯林仿藤脏衣篮 三桶 灰","cat":"脏衣篮","cost":54,"tb":229,"st":320,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10073.jpg"],"desc":"特斯林仿藤材质，三桶分类收纳，灰色（66.5×37.5×65 cm）","recommended":false,"hidden":false},
-  {"id":"RPF380W01","n":"悬浮白色相框 3件套","cat":"装饰","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10065.jpg"],"desc":"悬浮白色相框 3件套","recommended":false,"hidden":false},
-  {"id":"LCB083W01","n":"仿藤三桶白色镂空带轮","cat":"脏衣篮","cost":55,"tb":239,"st":7,"loc":"工厂","note":"库存仅7件","season":"Q1 2025","imgs":["/images/10097.jpg"],"desc":"仿藤三桶白色镂空带轮设计，移动方便（66×36×60 cm）","recommended":false,"hidden":false},
-  {"id":"LCB313B11","n":"藤编三桶脏衣篮 130L 黑灰","cat":"脏衣篮","cost":46,"tb":199,"st":68,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10053.jpg"],"desc":"藤编三桶设计，130L容量，黑灰色（65.3×33×60 cm / 130L）","recommended":false,"hidden":false},
-  {"id":"RLS002C01","n":"圆桶洗衣车 110L 薄荷绿","cat":"脏衣篮","cost":43,"tb":179,"st":168,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10057.jpg"],"desc":"圆桶洗衣推车，110L容量，薄荷绿清新配色（50×50×71 cm / 110L）","recommended":false,"hidden":false},
-  {"id":"RLS003G01","n":"方桶洗衣车 单桶 90L 灰色","cat":"脏衣篮","cost":44,"tb":179,"st":192,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10060.jpg"],"desc":"方桶洗衣推车，单桶90L，灰色（61×29×81 cm / 90L）","recommended":false,"hidden":false},
-  {"id":"RLS330G01","n":"极简皮标洗衣车 三桶 170L 灰","cat":"脏衣篮","cost":33,"tb":129,"st":156,"loc":"国内仓","note":"","season":"Q1 2025","imgs":["/images/10072.png"],"desc":"极简皮标设计，三桶170L，灰色，国内仓现货（69×40×91 cm / 170L）","recommended":false,"hidden":false},
-  {"id":"RLS005N01","n":"方桶洗衣推车 三桶","cat":"脏衣篮","cost":55,"tb":239,"st":29,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10096.jpg"],"desc":"方桶三桶洗衣推车，大容量（91×39×81 cm）","recommended":false,"hidden":false},
-  {"id":"BLH031G01","n":"铁木三桶脏衣篮 160L 灰色","cat":"脏衣篮","cost":57,"tb":259,"st":18,"loc":"国内仓","note":"需拼装","season":"Q1 2025","imgs":[],"desc":"铁木结构三桶脏衣篮，160L大容量，灰色（93×32×93 cm / 160L）","recommended":false,"hidden":false},
-  {"id":"BLH221G01","n":"毛巾架款铁木脏衣篮 双抽 92L","cat":"脏衣篮","cost":49,"tb":219,"st":23,"loc":"国内仓","note":"需拼装","season":"Q1 2025","imgs":["/images/10061.jpg"],"desc":"毛巾架+脏衣篮一体，铁木结构，双抽92L（73×33×177 cm / 92L）","recommended":false,"hidden":false},
-  {"id":"RDH008G01","n":"五层门上收纳挂袋 两件装","cat":"家居收纳","cost":0,"tb":99,"st":103,"loc":"国内仓","note":"仅付邮费","season":"Q1 2025","imgs":["/images/10031.png"],"desc":"五层超大容量，门背式无需打孔，两件装超值，国内仓现货（46.2×20.9×149.6 cm ×2件）","recommended":false,"hidden":false},
-  {"id":"LSF095K01SHE","n":"泰迪绒折叠收纳凳 浅驼色","cat":"家居收纳","cost":18,"tb":99,"st":64,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10094.png"],"desc":"泰迪绒面料，折叠收纳两用凳，浅驼色（38×38×38 cm）","recommended":false,"hidden":false},
-  {"id":"LHS023K03","n":"复古色带软包坐垫换鞋凳 6宫格","cat":"家居收纳","cost":72,"tb":299,"st":87,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10093.jpg"],"desc":"复古色6宫格换鞋凳，带软包坐垫，实用美观（87×30.2×48 cm）","recommended":false,"hidden":false},
-  {"id":"RLR005G02","n":"带脏衣袋行李架 灰色 2件装","cat":"家居收纳","cost":0,"tb":129,"st":61,"loc":"国内仓","note":"仅付邮费","season":"Q1 2025","imgs":[],"desc":"带脏衣袋行李架，灰色2件装，国内仓现货（69×45×58 cm）","recommended":false,"hidden":false},
-  {"id":"RLR064W02","n":"白色行李架 2件装","cat":"家居收纳","cost":33,"tb":149,"st":324,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10081.png"],"desc":"白色行李架2件装，简约实用（69×40×55 cm）","recommended":false,"hidden":false},
-  {"id":"JKA001WTPS","n":"两层瓷白化妆收纳盒","cat":"化妆收纳","cost":16,"tb":79,"st":63,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"瓷白材质两层化妆收纳盒，小巧精致（23.5×14×18.7 cm）","recommended":false,"hidden":false},
-  {"id":"JKA026B01","n":"化妆+首饰便携收纳包 黑色","cat":"化妆收纳","cost":21,"tb":89,"st":104,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"化妆+首饰便携收纳包，黑色，出行必备（22×12×12 cm）","recommended":false,"hidden":false},
-  {"id":"JKA008TPPS","n":"透明亚克力化妆收纳盒 6抽","cat":"化妆收纳","cost":22,"tb":89,"st":64,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10045.jpg"],"desc":"透明亚克力多层抽屉，顶部格子收纳口红粉底，彩妆党必备桌面整理（23.8×15.3×29.6 cm）","recommended":false,"hidden":false},
-  {"id":"JKA009BK","n":"黑色PS化妆收纳盒 6抽","cat":"化妆收纳","cost":22,"tb":89,"st":98,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10046.jpg"],"desc":"黑色PS材质，六层抽屉设计，桌面化妆台首选（23.8×15.3×29.6 cm）","recommended":false,"hidden":false},
-  {"id":"JKA009WTPS","n":"白色PS化妆收纳盒 6抽","cat":"化妆收纳","cost":22,"tb":89,"st":49,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"白色哑光材质，顶部多格分区+六层抽屉，桌面化妆台首选（23.8×15.3×29.6 cm）","recommended":false,"hidden":false},
-  {"id":"JBC158W01","n":"白色绒布三层首饰盒 透明玻璃盖","cat":"首饰盒","cost":20,"tb":89,"st":52,"loc":"国内仓","note":"","season":"Q1 2025","imgs":[],"desc":"透明玻璃盖一眼看清，绒布衬里保护首饰，三层抽屉大容量（23.1×20.3×13.9 cm）","recommended":false,"hidden":false},
-  {"id":"JBC181B01","n":"黑色多层托盘首饰盒","cat":"首饰盒","cost":33,"tb":139,"st":59,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"黑色多层托盘设计，首饰分类收纳（28×17×20.5 cm）","recommended":false,"hidden":false},
-  {"id":"JBC169W01","n":"三层白色LED首饰盒","cat":"首饰盒","cost":52,"tb":219,"st":36,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10114.jpg"],"desc":"三层白色LED灯首饰盒，打开即亮，精致高级（23×23×14.3 cm）","recommended":false,"hidden":false},
-  {"id":"JOW03W","n":"白色水晶扣三层木制首饰盒","cat":"首饰盒","cost":32,"tb":129,"st":9,"loc":"工厂","note":"库存仅9件","season":"Q1 2025","imgs":[],"desc":"白色水晶扣三层木制首饰盒，精致典雅（24×15×15 cm）","recommended":false,"hidden":false},
-  {"id":"JWB41B","n":"手表首饰一体黑色单层表盒","cat":"首饰盒","cost":22,"tb":89,"st":47,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10113.png"],"desc":"手表+首饰一体收纳，黑色单层表盒（33.3×19.3×9.7 cm）","recommended":false,"hidden":false},
-  {"id":"JWB027B01","n":"轻奢简型便携手表盒 黑色","cat":"首饰盒","cost":26,"tb":109,"st":2,"loc":"国内仓","note":"库存仅2件","season":"Q1 2025","imgs":[],"desc":"轻奢简型便携手表盒，黑色，国内仓现货（21×10×8.8 cm）","recommended":false,"hidden":false},
-  {"id":"JJC001K01","n":"全面镜挂门首饰柜","cat":"首饰柜","cost":71,"tb":299,"st":50,"loc":"工厂","note":"需安装","season":"Q1 2025","imgs":["/images/10063.png"],"desc":"全面镜挂门首饰柜，大容量首饰分格收纳（37×10×108 cm）","recommended":false,"hidden":false},
-  {"id":"JJC001N01","n":"挂墙首饰柜 海棠椒色","cat":"首饰柜","cost":71,"tb":299,"st":99,"loc":"工厂","note":"需安装","season":"Q1 2025","imgs":["/images/10064.png"],"desc":"海棠椒色木纹，挂墙式节省空间，大容量首饰分格收纳（37×10×108 cm）","recommended":false,"hidden":false},
-  {"id":"JJC003K01","n":"白色首饰柜","cat":"首饰柜","cost":72,"tb":309,"st":144,"loc":"工厂","note":"需安装","season":"Q1 2025","imgs":["/images/10030.jpg"],"desc":"白色全身镜首饰柜，108cm高，大容量（37.5×9.7×108 cm）","recommended":false,"hidden":false},
-  {"id":"LGS026K01","n":"带USB排插床头柜 复古色","cat":"床头柜","cost":0,"tb":299,"st":109,"loc":"国内仓","note":"欧标插头·需拼装·仅付邮费","season":"Q1 2025","imgs":["/images/10069.jpg","/images/10121.png"],"desc":"带USB排插复古色床头柜，国内仓现货，欧标插头（38×28×61 cm）","recommended":false,"hidden":false},
-  {"id":"LGS026K02","n":"带USB排插床头柜 浅象牙色","cat":"床头柜","cost":0,"tb":299,"st":89,"loc":"国内仓","note":"欧标插头·需拼装·仅付邮费","season":"Q1 2025","imgs":["/images/10070.png"],"desc":"带USB排插浅象牙色床头柜，国内仓现货，欧标插头（38×28×61 cm）","recommended":false,"hidden":false},
-  {"id":"LGS226K01","n":"带USB排插床头柜 复古色 双件套","cat":"床头柜","cost":0,"tb":569,"st":42,"loc":"国内仓","note":"欧标插头·需拼装·仅付邮费","season":"Q1 2025","imgs":["/images/10071.png","/images/10125.jpg"],"desc":"带USB排插复古色床头柜双件套，性价比更高（38×28×61 cm ×2）","recommended":false,"hidden":false},
-  {"id":"LGS225B21","n":"两抽上空布抽床头柜 黑色双装","cat":"床头柜","cost":109,"tb":499,"st":4,"loc":"国内仓","note":"需拼装","season":"Q1 2025","imgs":["/images/10084.png"],"desc":"两抽上空布抽床头柜黑色双装（38×28×61 cm ×2）","recommended":false,"hidden":false},
-  {"id":"LET634W01","n":"带灯床头柜 麻面白","cat":"床头柜","cost":134,"tb":599,"st":102,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10001.jpg"],"desc":"带灯床头柜，麻面白配色，高端质感（40×35×55 cm）","recommended":false,"hidden":false},
-  {"id":"LET371B01","n":"双层带排插边桌 复古色","cat":"边桌","cost":35,"tb":179,"st":231,"loc":"工厂","note":"欧标插头","season":"Q1 2025","imgs":["/images/10086.jpg"],"desc":"双层带排插边桌，复古色，实用百搭（38.5×30×48 cm）","recommended":false,"hidden":false},
-  {"id":"LNT50Z","n":"有轮沙发边桌 黑胡桃色 50cm","cat":"边桌","cost":45,"tb":199,"st":923,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10092.jpg"],"desc":"有轮沙发边桌，黑胡桃色，50cm高度，移动便捷（50×35×60 cm）","recommended":false,"hidden":false},
-  {"id":"LNT13XV1","n":"仿古色三件套装桌","cat":"边桌","cost":55,"tb":259,"st":47,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10013.png"],"desc":"仿古色三件套装桌，大中小三个尺寸，可嵌套（大 58.5×55.8×45.1 cm）","recommended":false,"hidden":false},
-  {"id":"LET372B01","n":"双层带排插边桌 复古色 2件套","cat":"边桌","cost":58,"tb":329,"st":488,"loc":"工厂","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10028.jpg"],"desc":"双层带排插边桌复古色2件套，超大库存（38.5×30×48 cm ×2）","recommended":false,"hidden":false},
-  {"id":"LET372B16V1","n":"双层带排插边桌 麻面黑 2件套","cat":"边桌","cost":108,"tb":459,"st":147,"loc":"工厂","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10012.jpg","/images/10087.jpg"],"desc":"双层带排插边桌麻面黑2件套，高端质感（38.5×30×48 cm ×2）","recommended":false,"hidden":false},
-  {"id":"LET227C01","n":"圆形带排插布篮边桌 橄榄绿","cat":"边桌","cost":62,"tb":279,"st":62,"loc":"工厂","note":"欧标插头","season":"Q1 2025","imgs":["/images/10032.jpg"],"desc":"圆形带排插布篮边桌，橄榄绿配色（45×45×50 cm）","recommended":false,"hidden":false},
-  {"id":"LET310B41V1","n":"大地暖棕色翻盖带排插边桌","cat":"边桌","cost":81,"tb":359,"st":43,"loc":"工厂","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10082.jpg","/images/10112.jpg"],"desc":"大地暖棕色翻盖设计带排插边桌（60×31.5×60 cm）","recommended":false,"hidden":false},
-  {"id":"LET318W73","n":"云溪白拼浅象牙单抽排插边桌","cat":"边桌","cost":134,"tb":599,"st":124,"loc":"工厂","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10014.jpg"],"desc":"云溪白拼浅象牙单抽排插边桌，高端质感（60×35×60 cm）","recommended":false,"hidden":false},
-  {"id":"LET318T14V1","n":"海边风单抽排插边桌","cat":"边桌","cost":144,"tb":629,"st":499,"loc":"工厂","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10083.png"],"desc":"海边风单抽排插边桌，超大库存（60×35×60 cm）","recommended":false,"hidden":false},
-  {"id":"LET315B01V1","n":"仿古色翻盖排插边桌 2件套","cat":"边桌","cost":135,"tb":599,"st":48,"loc":"国内仓","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10034.jpg"],"desc":"仿古色翻盖排插边桌2件套，国内仓现货（60×31.5×60 cm ×2）","recommended":false,"hidden":false},
-  {"id":"LET356K02","n":"C型排插布篮边桌 冷杉棕","cat":"边桌","cost":85,"tb":359,"st":15,"loc":"工厂","note":"欧标插头","season":"Q1 2025","imgs":["/images/10035.jpg"],"desc":"C型排插布篮边桌，冷杉棕配色（40×30×62.2 cm）","recommended":false,"hidden":false},
-  {"id":"LET356W01","n":"C型排插布篮边桌 浅暖白","cat":"边桌","cost":53,"tb":229,"st":13,"loc":"工厂","note":"欧标插头","season":"Q1 2025","imgs":["/images/10036.jpg"],"desc":"C型排插布篮边桌，浅暖白配色（40×30×62.2 cm）","recommended":false,"hidden":false},
-  {"id":"LCT64X","n":"仿古色咖啡桌茶几 106x60cm","cat":"咖啡桌","cost":80,"tb":329,"st":138,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":["/images/10095.jpg","/images/10122.jpg"],"desc":"仿古色咖啡桌茶几，106x60cm大桌面（106×60×45 cm）","recommended":false,"hidden":false},
-  {"id":"LBT101K01","n":"吧台桌带排插 复古色","cat":"咖啡桌","cost":61,"tb":299,"st":12,"loc":"国内仓","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10033.jpg"],"desc":"吧台桌带排插，复古色，100x90cm（100×40×90 cm）","recommended":false,"hidden":false},
-  {"id":"LRC291B01","n":"Berkley胡桃木酒吧推车","cat":"酒吧推车","cost":80,"tb":359,"st":151,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10015.jpg","/images/10091.jpg"],"desc":"Berkley系列胡桃木酒吧推车，中尺寸，高端质感（61.5×40×88 cm）","recommended":false,"hidden":false},
-  {"id":"LRC291A02","n":"Berkley金色大理石酒吧推车","cat":"酒吧推车","cost":82,"tb":369,"st":104,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10027.jpg","/images/10090.png"],"desc":"Berkley系列金色大理石酒吧推车，轻奢风（61.5×40×88 cm）","recommended":false,"hidden":false},
-  {"id":"BSC25BXV2","n":"五层水管风置物架 短款","cat":"置物架","cost":53,"tb":199,"st":45,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10007.jpg"],"desc":"工业水管风格，五层置物架短款（129.5×39.5×31 cm）","recommended":false,"hidden":false},
-  {"id":"BSC26BXV1","n":"五层水管风置物架 长款","cat":"置物架","cost":66,"tb":279,"st":28,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10007.jpg"],"desc":"工业水管风格，五层宽大层板，书房客厅展示架首选（129.5×62×31 cm）","recommended":false,"hidden":false},
-  {"id":"LGT029W01","n":"珍珠白管灰玻五层置物架","cat":"置物架","cost":63,"tb":259,"st":46,"loc":"国内仓","note":"","season":"Q1 2025","imgs":["/images/10038.jpg"],"desc":"珍珠白管灰玻材质五层置物架，国内仓现货（40×30×124.5 cm）","recommended":false,"hidden":false},
-  {"id":"LLS134B56","n":"山纹黑板磨砂黑管四层异形置物架","cat":"置物架","cost":82,"tb":359,"st":44,"loc":"国内仓","note":"","season":"Q1 2025","imgs":["/images/10039.png"],"desc":"山纹黑板磨砂黑管，四层异形设计，国内仓现货（100×30×103 cm）","recommended":false,"hidden":false},
-  {"id":"LLS134B01","n":"复古色四层异形铁木置物架","cat":"置物架","cost":166,"tb":729,"st":29,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10026.png"],"desc":"复古色四层异形铁木置物架，高端品质（100×30×103 cm）","recommended":false,"hidden":false},
-  {"id":"BSC020B01V1","n":"六层短款水管风置物架","cat":"置物架","cost":117,"tb":499,"st":85,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10037.jpg"],"desc":"六层短款水管风置物架，157.5cm高（39.5×31×157.5 cm）","recommended":false,"hidden":false},
-  {"id":"LGT503G01V","n":"六层180cm黑管灰玻置物架","cat":"置物架","cost":170,"tb":749,"st":143,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10008.png","/images/10089.jpg"],"desc":"六层180cm黑管灰玻置物架，超高大容量（80×30×177.3 cm）","recommended":false,"hidden":false},
-  {"id":"LBC424K01","n":"复古色八格书架","cat":"置物架","cost":117,"tb":499,"st":86,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":["/images/10006.jpg","/images/10115.jpg"],"desc":"八格大容量开放式书架，复古色系深木纹，书房必备（65.4×24×129.6 cm）","recommended":false,"hidden":false},
-  {"id":"LGT027C01","n":"三层铁配玻璃置物架 橄榄绿","cat":"玄关桌","cost":81,"tb":359,"st":4,"loc":"国内仓","note":"库存仅4件","season":"Q1 2025","imgs":["/images/10009.jpg"],"desc":"三层铁配玻璃置物架，橄榄绿配色（100×73×30 cm）","recommended":false,"hidden":false},
-  {"id":"LNT140K66","n":"BOHO风大容量储物玄关桌 燕麦咖","cat":"玄关桌","cost":121,"tb":559,"st":78,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":[],"desc":"BOHO风大容量储物玄关桌，燕麦咖配色（80×38×80 cm）","recommended":false,"hidden":false},
-  {"id":"HSR087B01V1","n":"仿古色3挂板门厅架","cat":"门厅架","cost":105,"tb":459,"st":55,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":[],"desc":"仿古色3挂板门厅架，182cm高（84×30×182 cm）","recommended":false,"hidden":false},
-  {"id":"HSR086B02V1","n":"浅象牙色门厅架","cat":"门厅架","cost":168,"tb":739,"st":273,"loc":"工厂","note":"需拼装","season":"Q1 2025","imgs":["/images/10025.png"],"desc":"浅象牙色门厅架，184cm高，大容量（100×40×184 cm）","recommended":false,"hidden":false},
-  {"id":"LTS519W02","n":"布抽斗柜带灯展示台","cat":"梳妆台","cost":169,"tb":749,"st":288,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":[],"desc":"布抽斗柜带灯展示台，高端设计（114×33.5×84 cm）","recommended":false,"hidden":false},
-  {"id":"RDT25BK","n":"黑色三抽梳妆台成套","cat":"梳妆台","cost":122,"tb":549,"st":8,"loc":"国内仓","note":"高密度板·需拼装","season":"Q1 2025","imgs":["/images/10017.jpg"],"desc":"全面镜+梳妆台+凳子三件套，三抽大容量，黑色高级，国内仓现货（80×40×137.5 cm）","recommended":false,"hidden":false},
-  {"id":"RDT116W01","n":"白色双抽层架梳妆台","cat":"梳妆台","cost":218,"tb":979,"st":4,"loc":"国内仓","note":"高密度板·需拼装","season":"Q1 2025","imgs":[],"desc":"白色双抽层架梳妆台，高端大气（80×40×132 cm）","recommended":false,"hidden":false},
-  {"id":"LTV096B60","n":"角铁铁木三层电视柜 178cm 蓝石棕","cat":"电视柜","cost":133,"tb":599,"st":2,"loc":"国内仓","note":"库存仅2件·需拼装","season":"Q1 2025","imgs":["/images/10022.jpg"],"desc":"角铁铁木三层电视柜，178cm，蓝石棕配色（178×39×52 cm）","recommended":false,"hidden":false},
-  {"id":"LTV111W01","n":"板木截断开放款电视柜 147cm","cat":"电视柜","cost":141,"tb":629,"st":4,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":["/images/10010.png"],"desc":"板木截断开放款电视柜，147cm（147×40×60 cm）","recommended":false,"hidden":false},
-  {"id":"LTV118K01","n":"带灯带排插开放电视柜 160cm","cat":"电视柜","cost":160,"tb":699,"st":28,"loc":"国内仓","note":"欧标插头·需拼装","season":"Q1 2025","imgs":["/images/10119.png"],"desc":"带灯带排插开放电视柜，160cm，国内仓现货（160×35×51 cm）","recommended":false,"hidden":false},
-  {"id":"LTV138B03","n":"镶玻璃挂墙电视柜 178cm 欧规","cat":"电视柜","cost":197,"tb":899,"st":48,"loc":"工厂","note":"欧标插头·需安装","season":"Q1 2025","imgs":["/images/10011.png"],"desc":"镶玻璃挂墙电视柜，178cm，欧规（187×35×30 cm）","recommended":false,"hidden":false},
-  {"id":"LTV138W03","n":"镶玻璃挂墙电视柜 178cm 白色","cat":"电视柜","cost":311,"tb":1399,"st":86,"loc":"工厂","note":"欧标插头·需安装","season":"Q1 2025","imgs":[],"desc":"白色镶玻璃挂墙电视柜，178cm，高端（187×35×30 cm）","recommended":false,"hidden":false},
-  {"id":"BBK742N01","n":"单门层架悬挂浴室柜","cat":"浴室柜","cost":74,"tb":329,"st":434,"loc":"工厂","note":"高密度板·需安装","season":"Q1 2025","imgs":[],"desc":"单门层架悬挂浴室柜，大库存（40×30×80 cm）","recommended":false,"hidden":false},
-  {"id":"BBK507G01","n":"单门左右层架水槽柜 背通","cat":"浴室柜","cost":119,"tb":529,"st":273,"loc":"工厂","note":"高密度板·需安装","season":"Q1 2025","imgs":["/images/10020.jpg"],"desc":"单门左右层架水槽柜，背通设计（90×30×60 cm）","recommended":false,"hidden":false},
-  {"id":"BBK507W01","n":"单门左右层架水槽柜 白色","cat":"浴室柜","cost":119,"tb":529,"st":361,"loc":"工厂","note":"高密度板·需安装","season":"Q1 2025","imgs":["/images/10021.jpg"],"desc":"单门左右层架水槽柜白色版（90×30×60 cm）","recommended":false,"hidden":false},
-  {"id":"BBK762N01","n":"浴室悬挂高柜 160cm","cat":"浴室柜","cost":196,"tb":889,"st":583,"loc":"工厂","note":"高密度板·需安装","season":"Q1 2025","imgs":["/images/10005.jpg","/images/10116.jpg"],"desc":"浴室悬挂高柜160cm，超大容量（40×30×160 cm）","recommended":false,"hidden":false},
-  {"id":"BBK125A10","n":"三门玻璃款浴室镜柜","cat":"浴室柜","cost":116,"tb":529,"st":5,"loc":"国内仓","note":"需安装","season":"Q1 2025","imgs":["/images/10004.jpg"],"desc":"三门玻璃款浴室镜柜（70×16×70 cm）","recommended":false,"hidden":false},
-  {"id":"BBK128B01","n":"双镜创新款浴室镜柜","cat":"浴室柜","cost":293,"tb":1299,"st":10,"loc":"国内仓","note":"需安装","season":"Q1 2025","imgs":["/images/10003.png"],"desc":"双镜创新款浴室镜柜，高端设计（80×59.5×13.5 cm）","recommended":false,"hidden":false},
-  {"id":"LMR02AV1","n":"两层棕色金属鞋架","cat":"鞋架","cost":18,"tb":89,"st":16,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10111.jpg"],"desc":"两层棕色金属鞋架，简约实用（92.3×30.5×41 cm）","recommended":false,"hidden":false},
-  {"id":"LMR002B01V1","n":"两层黑色金属鞋架","cat":"鞋架","cost":23,"tb":99,"st":180,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10066.png"],"desc":"两层黑色金属鞋架，百搭实用（92.3×30.5×41 cm）","recommended":false,"hidden":false},
-  {"id":"LBS041B01","n":"旋转鞋架 冷杉棕","cat":"鞋架","cost":129,"tb":599,"st":12,"loc":"国内仓","note":"需拼装","season":"Q1 2025","imgs":["/images/10016.png"],"desc":"旋转鞋架，冷杉棕色，国内仓现货（60×60×120 cm）","recommended":false,"hidden":false},
-  {"id":"LBS802W01","n":"铁木翻斗鞋柜 云溪白","cat":"鞋架","cost":139,"tb":599,"st":280,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":["/images/10029.png"],"desc":"铁木翻斗鞋柜，云溪白配色，大容量（80×30×131 cm）","recommended":false,"hidden":false},
-  {"id":"RMB871B01","n":"快装基础金属床架 Queen","cat":"床","cost":99,"tb":459,"st":14,"loc":"国内仓","note":"金属框架·需拼装","season":"Q1 2025","imgs":[],"desc":"快装基础金属床架Queen，国内仓现货（205×154.5×41 cm）","recommended":false,"hidden":false},
-  {"id":"RMB891G02","n":"美式抽屉储物床 Queen 深灰","cat":"床","cost":398,"tb":1799,"st":98,"loc":"工厂","note":"高密度板·需拼装·适配国内200×150床垫","season":"Q1 2025","imgs":["/images/10123.jpg"],"desc":"美式抽屉储物床Queen深灰，带储物抽屉（220.5×157.5×130.5 cm）","recommended":false,"hidden":false},
-  {"id":"RMB851G71","n":"美式现代风格悬浮床 Queen","cat":"床","cost":454,"tb":2099,"st":7,"loc":"工厂","note":"高密度板·需拼装","season":"Q1 2025","imgs":[],"desc":"美式现代风格悬浮床Queen，高端设计（220.9×160.9×110 cm）","recommended":false,"hidden":false},
-  {"id":"TAR021L02","n":"Boho地毯 浅卡色 3×5ft","cat":"地毯","cost":24,"tb":119,"st":250,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10062.png"],"desc":"Boho波西米亚风地毯，浅卡色，3x5ft小尺寸（153×92 cm (3×5 ft)）","recommended":false,"hidden":false},
-  {"id":"TAR088K01","n":"美式风格地毯 浅驼色 8×10ft","cat":"地毯","cost":110,"tb":499,"st":3,"loc":"工厂","note":"库存仅3件","season":"Q1 2025","imgs":["/images/10019.jpg"],"desc":"美式风格大地毯，浅驼色，8x10ft铺满客厅（305×244 cm (8×10 ft)）","recommended":false,"hidden":false},
-  {"id":"TAR123C01","n":"古董风地毯 森林绿 8×10ft","cat":"地毯","cost":111,"tb":499,"st":4,"loc":"工厂","note":"库存仅4件","season":"Q1 2025","imgs":["/images/10024.jpg"],"desc":"古董风地毯，森林绿配色，8x10ft（305×244 cm (8×10 ft)）","recommended":false,"hidden":false},
-  {"id":"TAR210L01","n":"Boho地毯 浅奶咖 8×10ft","cat":"地毯","cost":121,"tb":549,"st":110,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10018.png"],"desc":"Boho波西米亚超大地毯，浅奶咖色温柔百搭，8x10ft铺满客厅（305×244 cm (8×10 ft)）","recommended":false,"hidden":false},
-  {"id":"TAR210L02","n":"Boho地毯 浅卡色 8×10ft","cat":"地毯","cost":121,"tb":549,"st":197,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10023.jpg"],"desc":"Boho波西米亚超大地毯，浅卡色，8x10ft（305×244 cm (8×10 ft)）","recommended":false,"hidden":false},
-  {"id":"LTB660B0165L","n":"黑色不锈钢感应桶 65L","cat":"垃圾桶","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10088.jpg"],"desc":"黑色不锈钢感应垃圾桶 65L（65L）","recommended":false,"hidden":false},
-  {"id":"LTB560R015L","n":"杏桃橙不锈钢脚踏垃圾桶 15L","cat":"垃圾桶","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10109.jpg"],"desc":"杏桃橙不锈钢脚踏垃圾桶 15L（15L）","recommended":false,"hidden":false},
-  {"id":"LTB660E0165L","n":"银色不锈钢感应桶 65L","cat":"垃圾桶","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10110.jpg"],"desc":"银色不锈钢感应垃圾桶 65L（65L）","recommended":false,"hidden":false},
-  {"id":"LTB14NL5L","n":"不锈钢缓降垃圾桶 5L","cat":"垃圾桶","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10100.jpg"],"desc":"不锈钢缓降垃圾桶 5L小巧（5L）","recommended":false,"hidden":false},
-  {"id":"LTB670W0150L","n":"白色感应垃圾桶 50L","cat":"垃圾桶","cost":71,"tb":299,"st":8,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10101.jpg"],"desc":"红外感应自动开盖，白色简洁设计，含内桶+贴纸，50L客厅首选（39×29×60 cm / 50L）","recommended":false,"hidden":false},
-  {"id":"TBP022G01","n":"凉感褶棉化纤枕 灰色","cat":"床上用品","cost":29,"tb":99,"st":279,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"凉感褶棉化纤枕，灰色，80x80cm（80×80×18 cm）","recommended":false,"hidden":false},
-  {"id":"TBP024W01","n":"凉感化纤枕 白色 两件装","cat":"床上用品","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/tbp024w01.jpg"],"desc":"凉感化纤枕白色两件装（50×70 cm ×2）","recommended":false,"hidden":false},
-  {"id":"TDC033W01","n":"泡泡纱化纤被 King","cat":"床上用品","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10124.jpg"],"desc":"泡泡纱化纤被 King尺寸（King）","recommended":false,"hidden":false},
-  {"id":"LLD201WT","n":"竹制显示器增高架 白色","cat":"家居收纳","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10040.jpg"],"desc":"竹制显示器增高架，白色，桌面整理","recommended":false,"hidden":false},
-  {"id":"LBC059C01","n":"岛台高度靠背咖啡色吧椅 2件","cat":"家具","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10085.jpg"],"desc":"岛台高度靠背咖啡色吧椅 2件装","recommended":false,"hidden":false},
-  {"id":"RPF064B01A3","n":"现代立体展示框 橡木黑 3件套","cat":"装饰","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10002.jpg"],"desc":"现代立体展示框 橡木黑 3件套","recommended":false,"hidden":false},
-  {"id":"RPF052W01","n":"儿童画展示框 哑光白","cat":"装饰","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10102.png","/images/10104.png"],"desc":"儿童画展示框 哑光白","recommended":false,"hidden":false},
-  {"id":"RPF052B01","n":"儿童画展示框 橡木黑","cat":"装饰","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10103.jpg"],"desc":"儿童画展示框 橡木黑","recommended":false,"hidden":false},
-  {"id":"PGW211G01","n":"长毛绒蛋壳棉垫 80×50×8 cm 灰色 小号","cat":"宠物用品","cost":0,"tb":89,"st":6,"loc":"工厂","note":"仅付邮费","season":"Q1 2025","imgs":["/images/pgw211g01_cloud.jpg"],"desc":"灰色长毛绒面料，蛋壳棉填充，小型犬猫适用（80×50×8 cm）","recommended":false,"hidden":false},
+  {
+    "id": "PGW212G01",
+    "n": "长毛绒蛋壳棉垫 浅灰",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 159,
+    "st": 142,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10067.jpg",
+      "/images/10068.jpg"
+    ],
+    "desc": "浅灰长毛绒面料，蛋壳棉填充支撑，防滑底部，可机洗（95×60×8 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW212G02",
+    "n": "长毛绒蛋壳棉垫 深灰",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 159,
+    "st": 107,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10068.jpg"
+    ],
+    "desc": "深灰长毛绒面料，蛋壳棉填充支撑，防滑底部，可机洗（95×60×8 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW213G01",
+    "n": "长毛绒蛋壳棉垫 浅灰 大号",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 199,
+    "st": 130,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10118.jpg"
+    ],
+    "desc": "浅灰长毛绒面料，蛋壳棉填充，110x73cm大尺寸，适合中大型犬（110×73×10 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW213G02",
+    "n": "长毛绒蛋壳棉垫 深灰 大号",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 199,
+    "st": 39,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "深灰长毛绒面料，蛋壳棉填充，110x73cm大尺寸（110×73×10 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW214G02",
+    "n": "长毛绒蛋壳棉垫 深灰 超大号",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 239,
+    "st": 287,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "深灰长毛绒面料，蛋壳棉填充，122x74cm超大尺寸，大型犬专属（122×74×10 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW222R01",
+    "n": "长毛绒宠物沙发垫 粉色",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 219,
+    "st": 331,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10074.jpg"
+    ],
+    "desc": "粉嫩长毛绒沙发款，带靠背围边设计，超高颜值宠物专区（95×85×16 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW067G01",
+    "n": "麂皮绒菠萝格方形沙发垫 深灰",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 199,
+    "st": 42,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10047.jpg",
+      "/images/10080.jpg",
+      "/images/10105.jpg"
+    ],
+    "desc": "深灰麂皮绒面料，菠萝格方形设计，厚实填充，大型犬专属（91×71×25 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PDC003B0124",
+    "n": "八片牛津布宠物围栏",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 199,
+    "st": 219,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10059.jpg"
+    ],
+    "desc": "八片加固牛津布，稳固防逃脱，折叠收纳方便，适合中大型犬（112×112×62 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LPC005W01",
+    "n": "透明塑料DIY组合围栏",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 199,
+    "st": 181,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10075.png",
+      "/images/10076.jpg"
+    ],
+    "desc": "透明面板通透，可自由拼接DIY尺寸，适合兔子/豚鼠/小猫（143×73×91 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PDC090G02XXL",
+    "n": "XXL烟灰色牛津布宠物笼",
+    "cat": "宠物用品",
+    "cost": 36,
+    "tb": 189,
+    "st": 26,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10079.jpg"
+    ],
+    "desc": "XXL超大宠物笼，烟灰色牛津布，坚固耐用，便于折叠（91×63×63 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PDC90G01XXL",
+    "n": "XXL灰色牛津布宠物笼",
+    "cat": "宠物用品",
+    "cost": 36,
+    "tb": 189,
+    "st": 30,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10058.jpg"
+    ],
+    "desc": "XXL超大宠物笼，灰色牛津布，坚固耐用，国内仓现货（91×63.7×63.7 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT40W",
+    "n": "扇形楼梯猫爬架 95cm",
+    "cat": "猫爬架",
+    "cost": 32,
+    "tb": 168,
+    "st": 31,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10044.jpg"
+    ],
+    "desc": "扇形楼梯设计，小巧不占地，95cm适合小空间（49×49×95 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT614P01",
+    "n": "高果粉色猫爬架 101cm",
+    "cat": "猫爬架",
+    "cost": 46,
+    "tb": 239,
+    "st": 41,
+    "loc": "国内仓",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10052.jpg",
+      "/images/10056.jpg"
+    ],
+    "desc": "粉色高颜值猫爬架，101cm高度，国内仓现货（68×48×101 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT144W01M",
+    "n": "实木白毛绒猫爬架 123cm",
+    "cat": "猫爬架",
+    "cost": 46,
+    "tb": 299,
+    "st": 21,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10051.jpg",
+      "/images/10106.jpg"
+    ],
+    "desc": "实木白毛绒猫爬架，123cm，品质感强（68×43×123 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT166G03L",
+    "n": "雾茶灰猫爬架 165cm",
+    "cat": "猫爬架",
+    "cost": 46,
+    "tb": 359,
+    "st": 18,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10048.jpg"
+    ],
+    "desc": "雾茶灰高端配色，165cm超高猫爬架（58×40×165 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT85W",
+    "n": "浅灰色双顶台猫爬架 153cm",
+    "cat": "猫爬架",
+    "cost": 47,
+    "tb": 329,
+    "st": 13,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10043.jpg"
+    ],
+    "desc": "浅灰色双顶台设计，153cm，多猫家庭首选（60×52×153 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT90G",
+    "n": "全剑麻双猫窝爬架 烟灰 156cm",
+    "cat": "猫爬架",
+    "cost": 50,
+    "tb": 399,
+    "st": 39,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10041.png",
+      "/images/10078.jpg"
+    ],
+    "desc": "全剑麻材质，双猫窝设计，烟灰色，156cm（60×50×156 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT90M",
+    "n": "全剑麻双猫窝爬架 米色 156cm",
+    "cat": "猫爬架",
+    "cost": 50,
+    "tb": 399,
+    "st": 125,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10054.jpg",
+      "/images/10107.png"
+    ],
+    "desc": "全剑麻材质，双猫窝设计，米色温馨，156cm（60×50×156 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT90W",
+    "n": "全剑麻双猫窝爬架 浅灰 156cm",
+    "cat": "猫爬架",
+    "cost": 50,
+    "tb": 399,
+    "st": 33,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10055.jpg"
+    ],
+    "desc": "全剑麻材质，双猫窝设计，浅灰色，156cm（60×50×156 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT99W",
+    "n": "带喂食器猫爬架 浅灰 170cm",
+    "cat": "猫爬架",
+    "cost": 50,
+    "tb": 429,
+    "st": 87,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10049.jpg"
+    ],
+    "desc": "自带喂食器，浅灰色，超大170cm猫爬架（174×90×92 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCT99G",
+    "n": "带喂食器猫爬架 烟灰 170cm",
+    "cat": "猫爬架",
+    "cost": 50,
+    "tb": 429,
+    "st": 53,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10050.jpg"
+    ],
+    "desc": "自带喂食器，烟灰色，超大170cm猫爬架（174×90×92 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PCL111G01M",
+    "n": "猫砂箱爬架二合一 象牙色 115cm",
+    "cat": "猫爬架",
+    "cost": 48,
+    "tb": 389,
+    "st": 53,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10077.jpg"
+    ],
+    "desc": "猫砂箱+爬架二合一，象牙色，节省空间（52×52×115 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB209Q11",
+    "n": "布艺洗衣袋 90L 深蓝",
+    "cat": "脏衣篮",
+    "cost": 10,
+    "tb": 39,
+    "st": 16,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10042.jpg"
+    ],
+    "desc": "深蓝配色，90L超大容量，可折叠，轻便实用（40×35×65 cm / 90L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLH090G01",
+    "n": "棉布圆桶脏衣篮 90L 静谧灰",
+    "cat": "脏衣篮",
+    "cost": 14,
+    "tb": 55,
+    "st": 163,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10126.jpg",
+      "/images/10117.jpg"
+    ],
+    "desc": "棉布圆桶设计，静谧灰配色，国内仓现货（50×50×46 cm / 90L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB002G02",
+    "n": "仿麻布双筒脏衣篮 深灰 142L",
+    "cat": "脏衣篮",
+    "cost": 29,
+    "tb": 119,
+    "st": 153,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10108.jpg"
+    ],
+    "desc": "仿麻布双筒设计，深灰配色，142L超大容量（60×36×66 cm / 142L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB02BK",
+    "n": "仿麻布双筒脏衣篮 黑色",
+    "cat": "脏衣篮",
+    "cost": 34,
+    "tb": 129,
+    "st": 99,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "仿麻布双筒设计，黑色百搭（36×60×66 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB534BH01",
+    "n": "竹布四桶脏衣篮 225L 烟墨黑",
+    "cat": "脏衣篮",
+    "cost": 32,
+    "tb": 149,
+    "st": 26,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10099.png"
+    ],
+    "desc": "竹布四桶设计，225L超大容量，烟墨黑配色，国内仓现货（78×38×75 cm / 225L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB290B11",
+    "n": "铁布藤编脏衣篮 单桶 90L 黑灰",
+    "cat": "脏衣篮",
+    "cost": 53,
+    "tb": 199,
+    "st": 16,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10098.jpg"
+    ],
+    "desc": "铁布藤编工艺，单桶90L，黑灰色（46×33×60 cm / 90L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB602G01",
+    "n": "特斯林仿藤脏衣篮 三桶 灰",
+    "cat": "脏衣篮",
+    "cost": 54,
+    "tb": 229,
+    "st": 320,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10073.jpg"
+    ],
+    "desc": "特斯林仿藤材质，三桶分类收纳，灰色（66.5×37.5×65 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RPF380W01",
+    "n": "悬浮白色相框 3件套",
+    "cat": "装饰",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10065.jpg"
+    ],
+    "desc": "悬浮白色相框 3件套",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB083W01",
+    "n": "仿藤三桶白色镂空带轮",
+    "cat": "脏衣篮",
+    "cost": 55,
+    "tb": 239,
+    "st": 7,
+    "loc": "工厂",
+    "note": "库存仅7件",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10097.jpg"
+    ],
+    "desc": "仿藤三桶白色镂空带轮设计，移动方便（66×36×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCB313B11",
+    "n": "藤编三桶脏衣篮 130L 黑灰",
+    "cat": "脏衣篮",
+    "cost": 46,
+    "tb": 199,
+    "st": 68,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10053.jpg"
+    ],
+    "desc": "藤编三桶设计，130L容量，黑灰色（65.3×33×60 cm / 130L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLS002C01",
+    "n": "圆桶洗衣车 110L 薄荷绿",
+    "cat": "脏衣篮",
+    "cost": 43,
+    "tb": 179,
+    "st": 168,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10057.jpg"
+    ],
+    "desc": "圆桶洗衣推车，110L容量，薄荷绿清新配色（50×50×71 cm / 110L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLS003G01",
+    "n": "方桶洗衣车 单桶 90L 灰色",
+    "cat": "脏衣篮",
+    "cost": 44,
+    "tb": 179,
+    "st": 192,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10060.jpg"
+    ],
+    "desc": "方桶洗衣推车，单桶90L，灰色（61×29×81 cm / 90L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLS330G01",
+    "n": "极简皮标洗衣车 三桶 170L 灰",
+    "cat": "脏衣篮",
+    "cost": 33,
+    "tb": 129,
+    "st": 156,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10072.png"
+    ],
+    "desc": "极简皮标设计，三桶170L，灰色，国内仓现货（69×40×91 cm / 170L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLS005N01",
+    "n": "方桶洗衣推车 三桶",
+    "cat": "脏衣篮",
+    "cost": 55,
+    "tb": 239,
+    "st": 29,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10096.jpg"
+    ],
+    "desc": "方桶三桶洗衣推车，大容量（91×39×81 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BLH031G01",
+    "n": "铁木三桶脏衣篮 160L 灰色",
+    "cat": "脏衣篮",
+    "cost": 57,
+    "tb": 259,
+    "st": 18,
+    "loc": "国内仓",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "铁木结构三桶脏衣篮，160L大容量，灰色（93×32×93 cm / 160L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BLH221G01",
+    "n": "毛巾架款铁木脏衣篮 双抽 92L",
+    "cat": "脏衣篮",
+    "cost": 49,
+    "tb": 219,
+    "st": 23,
+    "loc": "国内仓",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10061.jpg"
+    ],
+    "desc": "毛巾架+脏衣篮一体，铁木结构，双抽92L（73×33×177 cm / 92L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RDH008G01",
+    "n": "五层门上收纳挂袋 两件装",
+    "cat": "家居收纳",
+    "cost": 0,
+    "tb": 99,
+    "st": 103,
+    "loc": "国内仓",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10031.png"
+    ],
+    "desc": "五层超大容量，门背式无需打孔，两件装超值，国内仓现货（46.2×20.9×149.6 cm ×2件）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LSF095K01SHE",
+    "n": "泰迪绒折叠收纳凳 浅驼色",
+    "cat": "家居收纳",
+    "cost": 18,
+    "tb": 99,
+    "st": 64,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10094.png"
+    ],
+    "desc": "泰迪绒面料，折叠收纳两用凳，浅驼色（38×38×38 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LHS023K03",
+    "n": "复古色带软包坐垫换鞋凳 6宫格",
+    "cat": "家居收纳",
+    "cost": 72,
+    "tb": 299,
+    "st": 87,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10093.jpg"
+    ],
+    "desc": "复古色6宫格换鞋凳，带软包坐垫，实用美观（87×30.2×48 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLR005G02",
+    "n": "带脏衣袋行李架 灰色 2件装",
+    "cat": "家居收纳",
+    "cost": 0,
+    "tb": 129,
+    "st": 61,
+    "loc": "国内仓",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "带脏衣袋行李架，灰色2件装，国内仓现货（69×45×58 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RLR064W02",
+    "n": "白色行李架 2件装",
+    "cat": "家居收纳",
+    "cost": 33,
+    "tb": 149,
+    "st": 324,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10081.png"
+    ],
+    "desc": "白色行李架2件装，简约实用（69×40×55 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JKA001WTPS",
+    "n": "两层瓷白化妆收纳盒",
+    "cat": "化妆收纳",
+    "cost": 16,
+    "tb": 79,
+    "st": 63,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "瓷白材质两层化妆收纳盒，小巧精致（23.5×14×18.7 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JKA026B01",
+    "n": "化妆+首饰便携收纳包 黑色",
+    "cat": "化妆收纳",
+    "cost": 21,
+    "tb": 89,
+    "st": 104,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "化妆+首饰便携收纳包，黑色，出行必备（22×12×12 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JKA008TPPS",
+    "n": "透明亚克力化妆收纳盒 6抽",
+    "cat": "化妆收纳",
+    "cost": 22,
+    "tb": 89,
+    "st": 64,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10045.jpg"
+    ],
+    "desc": "透明亚克力多层抽屉，顶部格子收纳口红粉底，彩妆党必备桌面整理（23.8×15.3×29.6 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JKA009BK",
+    "n": "黑色PS化妆收纳盒 6抽",
+    "cat": "化妆收纳",
+    "cost": 22,
+    "tb": 89,
+    "st": 98,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10046.jpg"
+    ],
+    "desc": "黑色PS材质，六层抽屉设计，桌面化妆台首选（23.8×15.3×29.6 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JKA009WTPS",
+    "n": "白色PS化妆收纳盒 6抽",
+    "cat": "化妆收纳",
+    "cost": 22,
+    "tb": 89,
+    "st": 49,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "白色哑光材质，顶部多格分区+六层抽屉，桌面化妆台首选（23.8×15.3×29.6 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JBC158W01",
+    "n": "白色绒布三层首饰盒 透明玻璃盖",
+    "cat": "首饰盒",
+    "cost": 20,
+    "tb": 89,
+    "st": 52,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "透明玻璃盖一眼看清，绒布衬里保护首饰，三层抽屉大容量（23.1×20.3×13.9 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JBC181B01",
+    "n": "黑色多层托盘首饰盒",
+    "cat": "首饰盒",
+    "cost": 33,
+    "tb": 139,
+    "st": 59,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "黑色多层托盘设计，首饰分类收纳（28×17×20.5 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JBC169W01",
+    "n": "三层白色LED首饰盒",
+    "cat": "首饰盒",
+    "cost": 52,
+    "tb": 219,
+    "st": 36,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10114.jpg"
+    ],
+    "desc": "三层白色LED灯首饰盒，打开即亮，精致高级（23×23×14.3 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JOW03W",
+    "n": "白色水晶扣三层木制首饰盒",
+    "cat": "首饰盒",
+    "cost": 32,
+    "tb": 129,
+    "st": 9,
+    "loc": "工厂",
+    "note": "库存仅9件",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "白色水晶扣三层木制首饰盒，精致典雅（24×15×15 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JWB41B",
+    "n": "手表首饰一体黑色单层表盒",
+    "cat": "首饰盒",
+    "cost": 22,
+    "tb": 89,
+    "st": 47,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10113.png"
+    ],
+    "desc": "手表+首饰一体收纳，黑色单层表盒（33.3×19.3×9.7 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JWB027B01",
+    "n": "轻奢简型便携手表盒 黑色",
+    "cat": "首饰盒",
+    "cost": 26,
+    "tb": 109,
+    "st": 2,
+    "loc": "国内仓",
+    "note": "库存仅2件",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "轻奢简型便携手表盒，黑色，国内仓现货（21×10×8.8 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JJC001K01",
+    "n": "全面镜挂门首饰柜",
+    "cat": "首饰柜",
+    "cost": 71,
+    "tb": 299,
+    "st": 50,
+    "loc": "工厂",
+    "note": "需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10063.png"
+    ],
+    "desc": "全面镜挂门首饰柜，大容量首饰分格收纳（37×10×108 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JJC001N01",
+    "n": "挂墙首饰柜 海棠椒色",
+    "cat": "首饰柜",
+    "cost": 71,
+    "tb": 299,
+    "st": 99,
+    "loc": "工厂",
+    "note": "需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10064.png"
+    ],
+    "desc": "海棠椒色木纹，挂墙式节省空间，大容量首饰分格收纳（37×10×108 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "JJC003K01",
+    "n": "白色首饰柜",
+    "cat": "首饰柜",
+    "cost": 72,
+    "tb": 309,
+    "st": 144,
+    "loc": "工厂",
+    "note": "需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10030.jpg"
+    ],
+    "desc": "白色全身镜首饰柜，108cm高，大容量（37.5×9.7×108 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGS026K01",
+    "n": "带USB排插床头柜 复古色",
+    "cat": "床头柜",
+    "cost": 0,
+    "tb": 299,
+    "st": 109,
+    "loc": "国内仓",
+    "note": "欧标插头·需拼装·仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10069.jpg",
+      "/images/10121.png"
+    ],
+    "desc": "带USB排插复古色床头柜，国内仓现货，欧标插头（38×28×61 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGS026K02",
+    "n": "带USB排插床头柜 浅象牙色",
+    "cat": "床头柜",
+    "cost": 0,
+    "tb": 299,
+    "st": 89,
+    "loc": "国内仓",
+    "note": "欧标插头·需拼装·仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10070.png"
+    ],
+    "desc": "带USB排插浅象牙色床头柜，国内仓现货，欧标插头（38×28×61 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGS226K01",
+    "n": "带USB排插床头柜 复古色 双件套",
+    "cat": "床头柜",
+    "cost": 0,
+    "tb": 569,
+    "st": 42,
+    "loc": "国内仓",
+    "note": "欧标插头·需拼装·仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10071.png",
+      "/images/10125.jpg"
+    ],
+    "desc": "带USB排插复古色床头柜双件套，性价比更高（38×28×61 cm ×2）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGS225B21",
+    "n": "两抽上空布抽床头柜 黑色双装",
+    "cat": "床头柜",
+    "cost": 109,
+    "tb": 499,
+    "st": 4,
+    "loc": "国内仓",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10084.png"
+    ],
+    "desc": "两抽上空布抽床头柜黑色双装（38×28×61 cm ×2）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET634W01",
+    "n": "带灯床头柜 麻面白",
+    "cat": "床头柜",
+    "cost": 134,
+    "tb": 599,
+    "st": 102,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10001.jpg"
+    ],
+    "desc": "带灯床头柜，麻面白配色，高端质感（40×35×55 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET371B01",
+    "n": "双层带排插边桌 复古色",
+    "cat": "边桌",
+    "cost": 35,
+    "tb": 179,
+    "st": 231,
+    "loc": "工厂",
+    "note": "欧标插头",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10086.jpg"
+    ],
+    "desc": "双层带排插边桌，复古色，实用百搭（38.5×30×48 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LNT50Z",
+    "n": "有轮沙发边桌 黑胡桃色 50cm",
+    "cat": "边桌",
+    "cost": 45,
+    "tb": 199,
+    "st": 923,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10092.jpg"
+    ],
+    "desc": "有轮沙发边桌，黑胡桃色，50cm高度，移动便捷（50×35×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LNT13XV1",
+    "n": "仿古色三件套装桌",
+    "cat": "边桌",
+    "cost": 55,
+    "tb": 259,
+    "st": 47,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10013.png"
+    ],
+    "desc": "仿古色三件套装桌，大中小三个尺寸，可嵌套（大 58.5×55.8×45.1 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET372B01",
+    "n": "双层带排插边桌 复古色 2件套",
+    "cat": "边桌",
+    "cost": 58,
+    "tb": 329,
+    "st": 488,
+    "loc": "工厂",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10028.jpg"
+    ],
+    "desc": "双层带排插边桌复古色2件套，超大库存（38.5×30×48 cm ×2）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET372B16V1",
+    "n": "双层带排插边桌 麻面黑 2件套",
+    "cat": "边桌",
+    "cost": 108,
+    "tb": 459,
+    "st": 147,
+    "loc": "工厂",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10012.jpg",
+      "/images/10087.jpg"
+    ],
+    "desc": "双层带排插边桌麻面黑2件套，高端质感（38.5×30×48 cm ×2）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET227C01",
+    "n": "圆形带排插布篮边桌 橄榄绿",
+    "cat": "边桌",
+    "cost": 62,
+    "tb": 279,
+    "st": 62,
+    "loc": "工厂",
+    "note": "欧标插头",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10032.jpg"
+    ],
+    "desc": "圆形带排插布篮边桌，橄榄绿配色（45×45×50 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET310B41V1",
+    "n": "大地暖棕色翻盖带排插边桌",
+    "cat": "边桌",
+    "cost": 81,
+    "tb": 359,
+    "st": 43,
+    "loc": "工厂",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10082.jpg",
+      "/images/10112.jpg"
+    ],
+    "desc": "大地暖棕色翻盖设计带排插边桌（60×31.5×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET318W73",
+    "n": "云溪白拼浅象牙单抽排插边桌",
+    "cat": "边桌",
+    "cost": 134,
+    "tb": 599,
+    "st": 124,
+    "loc": "工厂",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10014.jpg"
+    ],
+    "desc": "云溪白拼浅象牙单抽排插边桌，高端质感（60×35×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET318T14V1",
+    "n": "海边风单抽排插边桌",
+    "cat": "边桌",
+    "cost": 144,
+    "tb": 629,
+    "st": 499,
+    "loc": "工厂",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10083.png"
+    ],
+    "desc": "海边风单抽排插边桌，超大库存（60×35×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET315B01V1",
+    "n": "仿古色翻盖排插边桌 2件套",
+    "cat": "边桌",
+    "cost": 135,
+    "tb": 599,
+    "st": 48,
+    "loc": "国内仓",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10034.jpg"
+    ],
+    "desc": "仿古色翻盖排插边桌2件套，国内仓现货（60×31.5×60 cm ×2）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET356K02",
+    "n": "C型排插布篮边桌 冷杉棕",
+    "cat": "边桌",
+    "cost": 85,
+    "tb": 359,
+    "st": 15,
+    "loc": "工厂",
+    "note": "欧标插头",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10035.jpg"
+    ],
+    "desc": "C型排插布篮边桌，冷杉棕配色（40×30×62.2 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LET356W01",
+    "n": "C型排插布篮边桌 浅暖白",
+    "cat": "边桌",
+    "cost": 53,
+    "tb": 229,
+    "st": 13,
+    "loc": "工厂",
+    "note": "欧标插头",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10036.jpg"
+    ],
+    "desc": "C型排插布篮边桌，浅暖白配色（40×30×62.2 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LCT64X",
+    "n": "仿古色咖啡桌茶几 106x60cm",
+    "cat": "咖啡桌",
+    "cost": 80,
+    "tb": 329,
+    "st": 138,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10095.jpg",
+      "/images/10122.jpg"
+    ],
+    "desc": "仿古色咖啡桌茶几，106x60cm大桌面（106×60×45 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LBT101K01",
+    "n": "吧台桌带排插 复古色",
+    "cat": "咖啡桌",
+    "cost": 61,
+    "tb": 299,
+    "st": 12,
+    "loc": "国内仓",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10033.jpg"
+    ],
+    "desc": "吧台桌带排插，复古色，100x90cm（100×40×90 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LRC291B01",
+    "n": "Berkley胡桃木酒吧推车",
+    "cat": "酒吧推车",
+    "cost": 80,
+    "tb": 359,
+    "st": 151,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10015.jpg",
+      "/images/10091.jpg"
+    ],
+    "desc": "Berkley系列胡桃木酒吧推车，中尺寸，高端质感（61.5×40×88 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LRC291A02",
+    "n": "Berkley金色大理石酒吧推车",
+    "cat": "酒吧推车",
+    "cost": 82,
+    "tb": 369,
+    "st": 104,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10027.jpg",
+      "/images/10090.png"
+    ],
+    "desc": "Berkley系列金色大理石酒吧推车，轻奢风（61.5×40×88 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BSC25BXV2",
+    "n": "五层水管风置物架 短款",
+    "cat": "置物架",
+    "cost": 53,
+    "tb": 199,
+    "st": 45,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10007.jpg"
+    ],
+    "desc": "工业水管风格，五层置物架短款（129.5×39.5×31 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BSC26BXV1",
+    "n": "五层水管风置物架 长款",
+    "cat": "置物架",
+    "cost": 66,
+    "tb": 279,
+    "st": 28,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10007.jpg"
+    ],
+    "desc": "工业水管风格，五层宽大层板，书房客厅展示架首选（129.5×62×31 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGT029W01",
+    "n": "珍珠白管灰玻五层置物架",
+    "cat": "置物架",
+    "cost": 63,
+    "tb": 259,
+    "st": 46,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10038.jpg"
+    ],
+    "desc": "珍珠白管灰玻材质五层置物架，国内仓现货（40×30×124.5 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LLS134B56",
+    "n": "山纹黑板磨砂黑管四层异形置物架",
+    "cat": "置物架",
+    "cost": 82,
+    "tb": 359,
+    "st": 44,
+    "loc": "国内仓",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10039.png"
+    ],
+    "desc": "山纹黑板磨砂黑管，四层异形设计，国内仓现货（100×30×103 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LLS134B01",
+    "n": "复古色四层异形铁木置物架",
+    "cat": "置物架",
+    "cost": 166,
+    "tb": 729,
+    "st": 29,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10026.png"
+    ],
+    "desc": "复古色四层异形铁木置物架，高端品质（100×30×103 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BSC020B01V1",
+    "n": "六层短款水管风置物架",
+    "cat": "置物架",
+    "cost": 117,
+    "tb": 499,
+    "st": 85,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10037.jpg"
+    ],
+    "desc": "六层短款水管风置物架，157.5cm高（39.5×31×157.5 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGT503G01V",
+    "n": "六层180cm黑管灰玻置物架",
+    "cat": "置物架",
+    "cost": 170,
+    "tb": 749,
+    "st": 143,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10008.png",
+      "/images/10089.jpg"
+    ],
+    "desc": "六层180cm黑管灰玻置物架，超高大容量（80×30×177.3 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LBC424K01",
+    "n": "复古色八格书架",
+    "cat": "置物架",
+    "cost": 117,
+    "tb": 499,
+    "st": 86,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10006.jpg",
+      "/images/10115.jpg"
+    ],
+    "desc": "八格大容量开放式书架，复古色系深木纹，书房必备（65.4×24×129.6 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LGT027C01",
+    "n": "三层铁配玻璃置物架 橄榄绿",
+    "cat": "玄关桌",
+    "cost": 81,
+    "tb": 359,
+    "st": 4,
+    "loc": "国内仓",
+    "note": "库存仅4件",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10009.jpg"
+    ],
+    "desc": "三层铁配玻璃置物架，橄榄绿配色（100×73×30 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LNT140K66",
+    "n": "BOHO风大容量储物玄关桌 燕麦咖",
+    "cat": "玄关桌",
+    "cost": 121,
+    "tb": 559,
+    "st": 78,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "BOHO风大容量储物玄关桌，燕麦咖配色（80×38×80 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "HSR087B01V1",
+    "n": "仿古色3挂板门厅架",
+    "cat": "门厅架",
+    "cost": 105,
+    "tb": 459,
+    "st": 55,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "仿古色3挂板门厅架，182cm高（84×30×182 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "HSR086B02V1",
+    "n": "浅象牙色门厅架",
+    "cat": "门厅架",
+    "cost": 168,
+    "tb": 739,
+    "st": 273,
+    "loc": "工厂",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10025.png"
+    ],
+    "desc": "浅象牙色门厅架，184cm高，大容量（100×40×184 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTS519W02",
+    "n": "布抽斗柜带灯展示台",
+    "cat": "梳妆台",
+    "cost": 169,
+    "tb": 749,
+    "st": 288,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "布抽斗柜带灯展示台，高端设计（114×33.5×84 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RDT25BK",
+    "n": "黑色三抽梳妆台成套",
+    "cat": "梳妆台",
+    "cost": 122,
+    "tb": 549,
+    "st": 8,
+    "loc": "国内仓",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10017.jpg"
+    ],
+    "desc": "全面镜+梳妆台+凳子三件套，三抽大容量，黑色高级，国内仓现货（80×40×137.5 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RDT116W01",
+    "n": "白色双抽层架梳妆台",
+    "cat": "梳妆台",
+    "cost": 218,
+    "tb": 979,
+    "st": 4,
+    "loc": "国内仓",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "白色双抽层架梳妆台，高端大气（80×40×132 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTV096B60",
+    "n": "角铁铁木三层电视柜 178cm 蓝石棕",
+    "cat": "电视柜",
+    "cost": 133,
+    "tb": 599,
+    "st": 2,
+    "loc": "国内仓",
+    "note": "库存仅2件·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10022.jpg"
+    ],
+    "desc": "角铁铁木三层电视柜，178cm，蓝石棕配色（178×39×52 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTV111W01",
+    "n": "板木截断开放款电视柜 147cm",
+    "cat": "电视柜",
+    "cost": 141,
+    "tb": 629,
+    "st": 4,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10010.png"
+    ],
+    "desc": "板木截断开放款电视柜，147cm（147×40×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTV118K01",
+    "n": "带灯带排插开放电视柜 160cm",
+    "cat": "电视柜",
+    "cost": 160,
+    "tb": 699,
+    "st": 28,
+    "loc": "国内仓",
+    "note": "欧标插头·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10119.png"
+    ],
+    "desc": "带灯带排插开放电视柜，160cm，国内仓现货（160×35×51 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTV138B03",
+    "n": "镶玻璃挂墙电视柜 178cm 欧规",
+    "cat": "电视柜",
+    "cost": 197,
+    "tb": 899,
+    "st": 48,
+    "loc": "工厂",
+    "note": "欧标插头·需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10011.png"
+    ],
+    "desc": "镶玻璃挂墙电视柜，178cm，欧规（187×35×30 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTV138W03",
+    "n": "镶玻璃挂墙电视柜 178cm 白色",
+    "cat": "电视柜",
+    "cost": 311,
+    "tb": 1399,
+    "st": 86,
+    "loc": "工厂",
+    "note": "欧标插头·需安装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "白色镶玻璃挂墙电视柜，178cm，高端（187×35×30 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BBK742N01",
+    "n": "单门层架悬挂浴室柜",
+    "cat": "浴室柜",
+    "cost": 74,
+    "tb": 329,
+    "st": 434,
+    "loc": "工厂",
+    "note": "高密度板·需安装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "单门层架悬挂浴室柜，大库存（40×30×80 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BBK507G01",
+    "n": "单门左右层架水槽柜 背通",
+    "cat": "浴室柜",
+    "cost": 119,
+    "tb": 529,
+    "st": 273,
+    "loc": "工厂",
+    "note": "高密度板·需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10020.jpg"
+    ],
+    "desc": "单门左右层架水槽柜，背通设计（90×30×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BBK507W01",
+    "n": "单门左右层架水槽柜 白色",
+    "cat": "浴室柜",
+    "cost": 119,
+    "tb": 529,
+    "st": 361,
+    "loc": "工厂",
+    "note": "高密度板·需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10021.jpg"
+    ],
+    "desc": "单门左右层架水槽柜白色版（90×30×60 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BBK762N01",
+    "n": "浴室悬挂高柜 160cm",
+    "cat": "浴室柜",
+    "cost": 196,
+    "tb": 889,
+    "st": 583,
+    "loc": "工厂",
+    "note": "高密度板·需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10005.jpg",
+      "/images/10116.jpg"
+    ],
+    "desc": "浴室悬挂高柜160cm，超大容量（40×30×160 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BBK125A10",
+    "n": "三门玻璃款浴室镜柜",
+    "cat": "浴室柜",
+    "cost": 116,
+    "tb": 529,
+    "st": 5,
+    "loc": "国内仓",
+    "note": "需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10004.jpg"
+    ],
+    "desc": "三门玻璃款浴室镜柜（70×16×70 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "BBK128B01",
+    "n": "双镜创新款浴室镜柜",
+    "cat": "浴室柜",
+    "cost": 293,
+    "tb": 1299,
+    "st": 10,
+    "loc": "国内仓",
+    "note": "需安装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10003.png"
+    ],
+    "desc": "双镜创新款浴室镜柜，高端设计（80×59.5×13.5 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LMR02AV1",
+    "n": "两层棕色金属鞋架",
+    "cat": "鞋架",
+    "cost": 18,
+    "tb": 89,
+    "st": 16,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10111.jpg"
+    ],
+    "desc": "两层棕色金属鞋架，简约实用（92.3×30.5×41 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LMR002B01V1",
+    "n": "两层黑色金属鞋架",
+    "cat": "鞋架",
+    "cost": 23,
+    "tb": 99,
+    "st": 180,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10066.png"
+    ],
+    "desc": "两层黑色金属鞋架，百搭实用（92.3×30.5×41 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LBS041B01",
+    "n": "旋转鞋架 冷杉棕",
+    "cat": "鞋架",
+    "cost": 129,
+    "tb": 599,
+    "st": 12,
+    "loc": "国内仓",
+    "note": "需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10016.png"
+    ],
+    "desc": "旋转鞋架，冷杉棕色，国内仓现货（60×60×120 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LBS802W01",
+    "n": "铁木翻斗鞋柜 云溪白",
+    "cat": "鞋架",
+    "cost": 139,
+    "tb": 599,
+    "st": 280,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10029.png"
+    ],
+    "desc": "铁木翻斗鞋柜，云溪白配色，大容量（80×30×131 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RMB871B01",
+    "n": "快装基础金属床架 Queen",
+    "cat": "床",
+    "cost": 99,
+    "tb": 459,
+    "st": 14,
+    "loc": "国内仓",
+    "note": "金属框架·需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "快装基础金属床架Queen，国内仓现货（205×154.5×41 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RMB891G02",
+    "n": "美式抽屉储物床 Queen 深灰",
+    "cat": "床",
+    "cost": 398,
+    "tb": 1799,
+    "st": 98,
+    "loc": "工厂",
+    "note": "高密度板·需拼装·适配国内200×150床垫",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10123.jpg"
+    ],
+    "desc": "美式抽屉储物床Queen深灰，带储物抽屉（220.5×157.5×130.5 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RMB851G71",
+    "n": "美式现代风格悬浮床 Queen",
+    "cat": "床",
+    "cost": 454,
+    "tb": 2099,
+    "st": 7,
+    "loc": "工厂",
+    "note": "高密度板·需拼装",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "美式现代风格悬浮床Queen，高端设计（220.9×160.9×110 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TAR021L02",
+    "n": "Boho地毯 浅卡色 3×5ft",
+    "cat": "地毯",
+    "cost": 24,
+    "tb": 119,
+    "st": 250,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10062.png"
+    ],
+    "desc": "Boho波西米亚风地毯，浅卡色，3x5ft小尺寸（153×92 cm (3×5 ft)）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TAR088K01",
+    "n": "美式风格地毯 浅驼色 8×10ft",
+    "cat": "地毯",
+    "cost": 110,
+    "tb": 499,
+    "st": 3,
+    "loc": "工厂",
+    "note": "库存仅3件",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10019.jpg"
+    ],
+    "desc": "美式风格大地毯，浅驼色，8x10ft铺满客厅（305×244 cm (8×10 ft)）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TAR123C01",
+    "n": "古董风地毯 森林绿 8×10ft",
+    "cat": "地毯",
+    "cost": 111,
+    "tb": 499,
+    "st": 4,
+    "loc": "工厂",
+    "note": "库存仅4件",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10024.jpg"
+    ],
+    "desc": "古董风地毯，森林绿配色，8x10ft（305×244 cm (8×10 ft)）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TAR210L01",
+    "n": "Boho地毯 浅奶咖 8×10ft",
+    "cat": "地毯",
+    "cost": 121,
+    "tb": 549,
+    "st": 110,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10018.png"
+    ],
+    "desc": "Boho波西米亚超大地毯，浅奶咖色温柔百搭，8x10ft铺满客厅（305×244 cm (8×10 ft)）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TAR210L02",
+    "n": "Boho地毯 浅卡色 8×10ft",
+    "cat": "地毯",
+    "cost": 121,
+    "tb": 549,
+    "st": 197,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10023.jpg"
+    ],
+    "desc": "Boho波西米亚超大地毯，浅卡色，8x10ft（305×244 cm (8×10 ft)）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTB660B0165L",
+    "n": "黑色不锈钢感应桶 65L",
+    "cat": "垃圾桶",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10088.jpg"
+    ],
+    "desc": "黑色不锈钢感应垃圾桶 65L（65L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTB560R015L",
+    "n": "杏桃橙不锈钢脚踏垃圾桶 15L",
+    "cat": "垃圾桶",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10109.jpg"
+    ],
+    "desc": "杏桃橙不锈钢脚踏垃圾桶 15L（15L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTB660E0165L",
+    "n": "银色不锈钢感应桶 65L",
+    "cat": "垃圾桶",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10110.jpg"
+    ],
+    "desc": "银色不锈钢感应垃圾桶 65L（65L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTB14NL5L",
+    "n": "不锈钢缓降垃圾桶 5L",
+    "cat": "垃圾桶",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10100.jpg"
+    ],
+    "desc": "不锈钢缓降垃圾桶 5L小巧（5L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LTB670W0150L",
+    "n": "白色感应垃圾桶 50L",
+    "cat": "垃圾桶",
+    "cost": 71,
+    "tb": 299,
+    "st": 8,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10101.jpg"
+    ],
+    "desc": "红外感应自动开盖，白色简洁设计，含内桶+贴纸，50L客厅首选（39×29×60 cm / 50L）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TBP022G01",
+    "n": "凉感褶棉化纤枕 灰色",
+    "cat": "床上用品",
+    "cost": 29,
+    "tb": 99,
+    "st": 279,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [],
+    "desc": "凉感褶棉化纤枕，灰色，80x80cm（80×80×18 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TDC033W01",
+    "n": "泡泡纱化纤被 King",
+    "cat": "床上用品",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10124.jpg"
+    ],
+    "desc": "泡泡纱化纤被 King尺寸（King）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LLD201WT",
+    "n": "竹制显示器增高架 白色",
+    "cat": "家居收纳",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10040.jpg"
+    ],
+    "desc": "竹制显示器增高架，白色，桌面整理",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "LBC059C01",
+    "n": "岛台高度靠背咖啡色吧椅 2件",
+    "cat": "家具",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10085.jpg"
+    ],
+    "desc": "岛台高度靠背咖啡色吧椅 2件装",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RPF064B01A3",
+    "n": "现代立体展示框 橡木黑 3件套",
+    "cat": "装饰",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10002.jpg"
+    ],
+    "desc": "现代立体展示框 橡木黑 3件套",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RPF052W01",
+    "n": "儿童画展示框 哑光白",
+    "cat": "装饰",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10102.png",
+      "/images/10104.png"
+    ],
+    "desc": "儿童画展示框 哑光白",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "RPF052B01",
+    "n": "儿童画展示框 橡木黑",
+    "cat": "装饰",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/10103.jpg"
+    ],
+    "desc": "儿童画展示框 橡木黑",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "PGW211G01",
+    "n": "长毛绒蛋壳棉垫 80×50×8 cm 灰色 小号",
+    "cat": "宠物用品",
+    "cost": 0,
+    "tb": 89,
+    "st": 6,
+    "loc": "工厂",
+    "note": "仅付邮费",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/pgw211g01_0.jpg"
+    ],
+    "desc": "灰色长毛绒面料，蛋壳棉填充，小型犬猫适用（80×50×8 cm）",
+    "recommended": false,
+    "hidden": false
+  },
+  {
+    "id": "TBP024W01",
+    "n": "凉感化纤枕 白色 两件装",
+    "cat": "床上用品",
+    "cost": 0,
+    "tb": 0,
+    "st": 0,
+    "loc": "工厂",
+    "note": "",
+    "season": "Q1 2025",
+    "imgs": [
+      "/images/tbp024w01.jpg"
+    ],
+    "desc": "凉感化纤枕白色两件装（50×70 cm ×2）",
+    "recommended": false,
+    "hidden": false
+  }
 ];

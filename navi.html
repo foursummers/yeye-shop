@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navi Prime | Position Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2f5;--w:#fff;--sf:#f8fafb;--hv:#f1f5f9;
+  --bd:#e5e9ef;--bdl:#eef1f5;
+  --t1:#0f172a;--t2:#64748b;--tm:#94a3b8;
+  --teal:#0d9488;--teal-bg:#f0fdfa;--teal-m:#14b8a6;--teal-d:#0f766e;--teal-b:#a7f3d0;
+  --green:#28a745;--gbg:#f0fdf4;--gt:#15803d;--gb:#bbf7d0;
+  --blue:#2563eb;--bbg:#eff6ff;--bbd:#bfdbfe;
+  --red:#dc3545;--rbg:#fef2f2;--rbd:#fecaca;--rt:#b91c1c;
+  --amber:#d97706;--abg:#fffbeb;--abd:#fde68a;
+  --nw:224px;--hh:56px;--r:10px;--rs:6px;--rx:4px
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t1);font-size:14px;line-height:1.5;min-height:100vh}
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hh);background:var(--w);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:100}
+.hdr-l{display:flex;align-items:center;width:var(--nw);padding:0 18px;border-right:1px solid var(--bd);height:100%}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-t{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.logo-s{font-size:10px;color:var(--tm)}
+.hdr-r{display:flex;align-items:center;gap:10px}
+.net-badge{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--teal-bg);border:1px solid #99f6e4;border-radius:20px;font-size:12px;font-weight:500;color:var(--teal-d)}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.layout{display:flex;padding-top:var(--hh);min-height:100vh}
+.sb{width:var(--nw);background:var(--w);border-right:1px solid var(--bd);position:fixed;top:var(--hh);bottom:0;left:0;display:flex;flex-direction:column;overflow-y:auto}
+.sb-inner{padding:14px 12px;flex:1;display:flex;flex-direction:column}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--rs);cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:all .12s;position:relative;border:none;background:none;width:100%;text-align:left;font-family:inherit;margin-bottom:1px}
+.ni:hover:not(.active){background:var(--hv);color:var(--t1)}
+.ni.active{background:var(--teal-bg);color:var(--teal-d)}
+.ni.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--teal);border-radius:0 3px 3px 0}
+.ni-icon{width:16px;height:16px;flex-shrink:0;opacity:.65}
+.ni.active .ni-icon{opacity:1}
+.ni-lm{font-size:13px;font-weight:500;display:block}
+.ni-ls{font-size:10px;color:var(--tm);font-weight:400;display:block}
+.nd{height:1px;background:var(--bdl);margin:10px 0}
+.ns-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);padding:0 12px;margin-bottom:6px}
+.wi{padding:8px 12px;border-radius:var(--rs);margin-bottom:2px}
+.wi-name{font-size:12px;font-weight:600}
+.wi-row{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.wi-addr{font-family:monospace;font-size:10px;color:var(--tm)}
+.wi-acts{display:flex;align-items:center;gap:3px;opacity:0;transition:opacity .15s}
+.wi:hover .wi-acts{opacity:1}
+.wi-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:transparent;border:none;cursor:pointer;color:var(--tm);transition:all .12s;text-decoration:none;padding:0}
+.wi-btn:hover{background:var(--bd);color:var(--t1)}
+.wmgr-toggle{display:flex;align-items:center;gap:6px;margin:6px 12px 0;padding:6px 10px;border-radius:var(--rs);background:var(--sf);border:1px solid var(--bd);cursor:pointer;font-size:11px;font-weight:500;color:var(--t2);transition:all .12s}
+.wmgr-toggle:hover{border-color:var(--teal-m);color:var(--teal-d);background:var(--teal-bg)}
+.wmgr-panel{display:none;margin:6px 10px 0;padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);font-size:12px}
+.wmgr-panel.open{display:block}
+.wm-inp{width:100%;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--rx);font-size:11px;font-family:inherit;background:var(--w);color:var(--t1);margin-bottom:6px;outline:none}
+.wm-inp:focus{border-color:var(--teal-m)}
+.wm-btn{width:100%;padding:5px 0;background:var(--teal);color:white;border:none;border-radius:var(--rx);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:4px}
+.wm-btn:hover{background:var(--teal-d)}
+.wm-btn.sec{background:var(--w);color:var(--t2);border:1px solid var(--bd)}
+.wm-btn.sec:hover{background:var(--rbg);color:var(--red);border-color:var(--rbd)}
+.wm-msg{font-size:10px;color:var(--red);margin-top:4px;min-height:14px}
+.wm-msg.ok{color:var(--gt)}
+.sb-ft{padding:12px;border-top:1px solid var(--bdl);margin-top:auto}
+.net-st{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs)}
+.net-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+.net-nm{font-size:12px;font-weight:600}
+.net-dt{font-size:10px;color:var(--tm)}
+.main{margin-left:var(--nw);flex:1;min-width:0}
+.panel{display:none;padding:24px 28px}
+.panel.active{display:block}
+.alert{border-radius:var(--r);padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.6}
+.alert.healthy{background:var(--gbg);border:1px solid var(--gb)}
+.alert.warning{background:var(--abg);border:1px solid var(--abd)}
+.alert.critical{background:#fff5f5;border:1px solid var(--rbd)}
+.alert-title{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.at-green{color:var(--gt)}.at-amber{color:var(--amber)}.at-red{color:var(--rt)}
+.c4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.c3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.mc{background:var(--w);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px}
+.mc-lbl{font-size:11px;color:var(--t2);font-weight:500;margin-bottom:8px}
+.mc-val{font-size:24px;font-weight:700;letter-spacing:-.025em;line-height:1;margin-bottom:5px}
+.mc-val.green{color:var(--green)}.mc-val.teal{color:var(--teal-d)}.mc-val.red{color:var(--red)}
+.mc-val.amber{color:var(--amber)}.mc-val.blue{color:var(--blue)}.mc-val.muted{color:var(--t2)}
+.mc-sub{font-size:11px;color:var(--t2)}
+.sec{background:var(--w);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--bdl);background:var(--sf)}
+.sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2)}
+.sec-right{display:flex;align-items:center;gap:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{padding:8px 20px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);background:var(--sf);border-bottom:1px solid var(--bdl);white-space:nowrap}
+th.r,td.r{text-align:right}
+tbody td{padding:11px 20px;border-bottom:1px solid var(--bdl);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fafbfc}
+.tr-total td{font-weight:700;background:var(--sf);border-top:1px solid var(--bd);border-bottom:none!important}
+.ac{display:flex;align-items:center;gap:9px}
+.ai{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:1.5px solid var(--bd)}
+.ai-usdc{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.ai-sui{background:#e0f2fe;color:#0369a1;border-color:#bae6fd}
+.ai-vsui{background:var(--gbg);color:var(--gt);border-color:var(--gb)}
+.ai-navx{background:var(--teal-bg);color:var(--teal-d);border-color:var(--teal-b)}
+.ai-deep{background:#fdf4ff;color:#7e22ce;border-color:#e9d5ff}
+.ai-x{background:var(--sf);color:var(--t2);border-color:var(--bd)}
+.tag{display:inline-flex;align-items:center;padding:1px 7px;border-radius:var(--rx);font-size:10px;font-weight:600}
+.t-sup{background:var(--gbg);color:var(--gt);border:1px solid var(--gb)}
+.t-wal{background:var(--sf);color:var(--t2);border:1px solid var(--bd)}
+.vg{color:var(--green);font-weight:600}
+.vr{color:var(--red);font-weight:600}
+.vt{color:var(--teal-d);font-weight:700}
+.vm{color:var(--t2)}
+.sb-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700}
+.sb-safe{background:var(--gbg);color:var(--gt)}
+.sb-crit{background:var(--rbg);color:var(--rt)}
+.sb-warn{background:var(--abg);color:var(--amber)}
+.sb-na{background:var(--sf);color:var(--tm);border:1px solid var(--bd)}
+.chart-wrap{position:relative;height:260px;padding:16px 20px 8px}
+.btn{padding:5px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--w);font-size:12px;font-weight:500;color:var(--teal-d);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:all .12s;text-decoration:none}
+.btn:hover{background:var(--teal-bg);border-color:var(--teal-m)}
+.btn-primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-primary:hover{background:var(--teal-d)}
+.empty{padding:16px 20px;font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px}
+.page-ft{border-top:1px solid var(--bd);padding:12px 28px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--tm);background:var(--w)}
+.ft-chips{display:flex;gap:6px}
+.ft-chip{padding:3px 9px;background:var(--sf);border:1px solid var(--bd);border-radius:20px;font-size:10px;color:var(--t2)}
+.loader{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:14px;color:var(--teal-d);font-weight:500}
+.loader.show{display:flex}
+.spin{width:32px;height:32px;border:3px solid var(--teal-b);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.share-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bbg);border:1px solid var(--bbd);border-radius:var(--r);margin-bottom:16px;font-size:12px}
+.share-bar input{flex:1;padding:5px 8px;border:1px solid var(--bbd);border-radius:var(--rx);font-family:monospace;font-size:11px;background:var(--w);color:var(--t1);outline:none}
+.data-src{font-size:10px;color:var(--tm);padding:2px 7px;border-radius:3px;background:var(--gbg);border:1px solid var(--gb);font-weight:600;white-space:nowrap}
+@media(max-width:900px){.sb{display:none}.main{margin-left:0}.c4{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:1fr}}
+@media print{.sb,.hdr,.page-ft,.share-bar,.wmgr-toggle,.wmgr-panel{display:none!important}.main{margin-left:0}.panel{display:block!important}body{background:white}}
+</style>
+</head>
+<body>
+<div class="loader" id="loader"><div class="spin"></div><span id="loader-msg">Loading on-chain data…</span></div>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a href="#" class="logo" onclick="event.preventDefault()">
+      <svg width="36" height="24" viewBox="0 0 36 24" fill="none"><path d="M36 15.3792V23.28C36 23.6784 35.6784 24 35.28 24H30.504C30.2064 24 29.9184 23.9088 29.676 23.7384L13.872 12.6096C13.3128 12.1872 12 12.3072 12 13.596V23.28C12 23.6784 11.6784 24 11.28 24H0.72C0.3216 24 0 23.6784 0 23.28V12.72C0 12.3216 0.3216 12 0.72 12H7.2C8.7072 12 9.6 11.0304 9.6 9.59998V1.19998C9.6 0.801581 9.9216 0.47998 10.32 0.47998H15.0864C15.432 0.47998 15.6816 0.573581 15.9264 0.751181L35.592 14.5944C35.8896 14.8032 36 15.0384 36 15.3792Z" fill="#0DC3A4"/><path d="M36 0.72V11.0352C36 11.4576 35.592 11.6736 35.244 11.4288L24.4128 3.8016C24.1536 3.6216 24 3.42 24 3.012V0.72C24 0.3216 24.3216 0 24.72 0H35.28C35.6784 0 36 0.3216 36 0.72Z" fill="#0DC3A4"/></svg>
+      <div><div class="logo-t">Navi Prime</div><div class="logo-s">Institutional Monitoring</div></div>
+    </a>
+  </div>
+  <div class="hdr-r">
+    <button class="btn" onclick="refreshData()" title="Refresh">↻ Refresh</button>
+    <div class="net-badge"><div class="pulse"></div>Sui Mainnet <span style="font-weight:400;font-size:11px;color:var(--teal-d)">Live</span></div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="sb">
+  <div class="sb-inner" id="sb-inner"></div>
+  <div class="sb-ft"><div class="net-st"><div class="net-dot"></div><div><div class="net-nm">Sui Mainnet</div><div class="net-dt" id="sb-status">Connecting…</div></div></div></div>
+</nav>
+<div class="main">
+  <div id="p-yield" class="panel active">
+    <div id="share-bar"></div>
+    <div id="yield-alert"></div>
+    <div class="c4" id="kpi-cards"></div>
+    <div class="sec">
+      <div class="sec-head"><span class="sec-title">Net Yield Summary</span><div class="sec-right"><span class="data-src">● On-chain real-time</span></div></div>
+      <table><thead><tr><th>Component</th><th class="r">Annual USD</th><th>Notes</th></tr></thead><tbody id="yield-body"></tbody></table>
+    </div>
+  </div>
+  <div id="p-positions" class="panel">
+    <div class="sec"><div class="sec-head"><span class="sec-title">Liquidation Risk</span><div class="sec-right"><span class="data-src">● Oracle real-time</span></div></div>
+      <table><thead><tr><th>Metric</th><th>Value</th><th>Status</th></tr></thead><tbody id="risk-body"></tbody></table></div>
+    <div class="sec" id="sec-supply"><div class="sec-head"><span class="sec-title">NAVI Supply Positions</span><div class="sec-right"><a href="https://app.naviprotocol.io/" target="_blank" class="btn">Open NAVI ↗</a></div></div>
+      <table><thead><tr><th>Asset</th><th class="r">Amount</th><th class="r">Value USD</th><th class="r">APR</th><th class="r">Liq. Threshold</th></tr></thead><tbody id="sup-body"></tbody></table></div>
+    <div class="sec" id="sec-borrow"><div class="sec-head"><span class="sec-title">NAVI Borrow Positions</span></div><div id="bor-content"></div></div>
+    <div class="sec" id="sec-volo" style="display:none"><div class="sec-head"><span class="sec-title">Volo Vault (vSUI in wallet)</span><div class="sec-right"><a href="https://www.volosui.com/" target="_blank" class="btn">Open Volo ↗</a></div></div>
+      <table><thead><tr><th>Asset</th><th>Wallet</th><th class="r">Amount</th><th class="r">Value USD</th></tr></thead><tbody id="volo-body"></tbody></table></div>
+    <div class="sec"><div class="sec-head"><span class="sec-title">Wallet Balances (on-chain)</span><div class="sec-right"><span class="data-src">● suix_getAllBalances</span></div></div>
+      <table><thead><tr><th>Asset</th><th>Wallet</th><th class="r">Amount</th><th class="r">Price</th><th class="r">Value USD</th></tr></thead><tbody id="bal-body"></tbody></table></div>
+  </div>
+  <div id="p-unclaimed" class="panel">
+    <div class="c3" id="unc-cards"></div>
+    <div class="sec"><div class="sec-head"><span class="sec-title">Claimable Rewards Breakdown</span><div class="sec-right"><span class="data-src">● On-chain incentive data</span></div></div>
+      <table><thead><tr><th>Token</th><th>Source</th><th>Type</th><th class="r">Amount</th><th class="r">Price</th><th class="r">USD Value</th><th>Wallet</th></tr></thead><tbody id="unc-body"></tbody></table></div>
+  </div>
+  <div id="p-monthly" class="panel">
+    <div class="c3" id="monthly-cards"></div>
+    <div class="sec"><div class="sec-head"><span class="sec-title">Monthly Claimed Rewards</span><div class="sec-right"><span class="data-src">● On-chain claim transactions</span></div></div>
+      <div class="chart-wrap"><canvas id="rwd-chart"></canvas></div></div>
+    <div class="sec"><div class="sec-head"><span class="sec-title">Monthly Breakdown</span></div>
+      <table><thead><tr><th>Month</th><th class="r">Claimed Rewards</th><th>Tokens</th><th class="r">Avg Price</th><th class="r">Total USD</th></tr></thead><tbody id="mo-body"></tbody></table></div>
+  </div>
+  <div class="page-ft"><span id="ft-txt">Connecting…</span><div class="ft-chips"><span class="ft-chip">SUI Mainnet</span><span class="ft-chip">NAVI v2</span><span class="ft-chip">Volo</span><span class="ft-chip">Navi Prime</span></div></div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+'use strict';
+const EDIT_CODE = 'Elliscope';
+const SUI_RPC = 'https://fullnode.mainnet.sui.io:443';
+const NAVI_API = 'https://open-api.naviprotocol.io/api';
+const NAVI_STORAGE = '0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe';
+const VOLO_CERT_TYPE = '0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT';
+const SCALE27 = 1000000000000000000000000000n;
+
+const KNOWN_DECIMALS = {
+  SUI:9, USDC:6, wUSDC:6, USDT:6, suiUSDT:6, suiUSDe:6, FDUSD:6, AUSD:6, USDY:6, BUCK:9, USDSUI:6,
+  vSUI:9, CERT:9, haSUI:9, stSUI:9, NAVX:9, DEEP:6, CETUS:9, NS:6, BLUE:9,
+  WAL:9, HAEDAL:9, IKA:9, XAUm:9, suiETH:8, WETH:8, SOL:8,
+  wBTC:8, WBTC:8, xBTC:8, LBTC:8, MBTC:8, enzoBTC:8, stBTC:8
+};
+
+let S = { wallets:[], pools:[], poolMap:{}, coinTypeToPool:{}, perWallet:{}, errors:[], lastUpdated:null, chartInst:null,
+  userInfoTableId: null, reserveTableId: null };
+
+/* ── URL Router ── */
+const Router = {
+  parse() {
+    const p = new URLSearchParams(location.search);
+    const addrs = (p.get('wallets')||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const names = (p.get('names')||'').split(',').map(s=>s.trim().replace(/_/g,' '));
+    return addrs.map((a,i)=>({address:a, name:names[i]||`Wallet ${i+1}`}));
+  },
+  update(w) {
+    const url = new URL(location.href);
+    if(w.length){url.searchParams.set('wallets',w.map(x=>x.address).join(','));url.searchParams.set('names',w.map(x=>x.name.replace(/\s+/g,'_')).join(','));}
+    else{url.searchParams.delete('wallets');url.searchParams.delete('names');}
+    history.replaceState(null,'',url.toString());
+  },
+  shareLink(){const u=new URL(location.href);u.searchParams.delete('edit');return u.toString();}
+};
+
+/* ── RPC ── */
+let rpcId=0;
+async function suiRpc(method,params=[]){
+  const r=await fetch(SUI_RPC,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:++rpcId,method,params})});
+  const j=await r.json();if(j.error)throw new Error(`RPC ${method}: ${j.error.message}`);return j.result;
+}
+async function naviGet(path){const r=await fetch(`${NAVI_API}${path}`);if(!r.ok)throw new Error(`NAVI ${path}: ${r.status}`);return r.json();}
+
+/* ── Formatters ── */
+function fUSD(n){if(n==null||isNaN(n))return'—';const a=Math.abs(n);const s=a>=10000?'$'+Math.round(a).toLocaleString('en-US'):'$'+a.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return(n<0?'-':'')+s;}
+function fNum(n,d=2){return n==null?'—':Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});}
+function fPct(p){return p==null?'—':Number(p).toFixed(3)+'%';}
+function shortAddr(a){return a?a.slice(0,6)+'…'+a.slice(-4):'';}
+function normCT(ct){return(ct||'').replace(/^0x0+/,'0x');}
+function extractSym(ct){if(!ct)return'?';const p=ct.split('::'),r=p[p.length-1];if(r==='CERT')return'vSUI';if(r==='COIN'){if(ct.includes('5d4b30'))return'wUSDC';if(ct.includes('c06000'))return'wUSDT';if(ct.includes('af8cd5'))return'WETH';if(ct.includes('027792'))return'WBTC';if(ct.includes('b7844e'))return'SOL';}return r;}
+function guessDec(sym,ct){if(KNOWN_DECIMALS[sym])return KNOWN_DECIMALS[sym];const p=S.coinTypeToPool[normCT(ct)];return p?.token?.decimals||9;}
+function aiH(sym){const s=(sym||'').toLowerCase();if(s.includes('vsui')||s==='cert')return'<div class="ai ai-vsui">vS</div>';if(s==='sui')return'<div class="ai ai-sui">SU</div>';if(s.includes('usdc'))return'<div class="ai ai-usdc">UC</div>';if(s.includes('usdt'))return'<div class="ai ai-usdc">UT</div>';if(s.includes('navx'))return'<div class="ai ai-navx">NX</div>';if(s.includes('deep'))return'<div class="ai ai-deep">DP</div>';return`<div class="ai ai-x">${(sym||'??').slice(0,2).toUpperCase()}</div>`;}
+
+/* ── Data Fetchers ── */
+async function fetchPools(){
+  const d=await naviGet('/navi/pools');
+  S.pools=(d.data||d).filter(p=>p.token);S.poolMap={};S.coinTypeToPool={};
+  for(const p of S.pools){S.poolMap[p.id]=p;const ct=p.suiCoinType||('0x'+p.coinType);S.coinTypeToPool[ct]=p;S.coinTypeToPool[normCT(ct)]=p;}
+}
+
+async function fetchBalances(addr){
+  return(await suiRpc('suix_getAllBalances',[addr])).map(b=>({coinType:b.coinType,balance:BigInt(b.totalBalance),symbol:extractSym(b.coinType),decimals:guessDec(extractSym(b.coinType),b.coinType)}));
+}
+
+async function fetchClaimedRewards(addr){
+  try{const d=await naviGet(`/navi/user/rewards?userAddress=${addr}`);
+    if(d?.data?.rewards&&Array.isArray(d.data.rewards))return d.data.rewards;
+    if(Array.isArray(d?.data))return d.data;return Array.isArray(d)?d:[];
+  }catch{return[];}
+}
+
+async function readStorageStructure(){
+  if(S.userInfoTableId&&S.reserveTableId)return;
+  const obj=await suiRpc('sui_getObject',[NAVI_STORAGE,{showContent:true}]);
+  const f=obj?.data?.content?.fields;if(!f)throw new Error('Cannot read NAVI storage');
+  S.userInfoTableId=f.user_info?.fields?.id?.id;
+  S.reserveTableId=f.reserves?.fields?.id?.id;
+}
+
+async function fetchUserPositions(addr){
+  const positions={supplies:[],borrows:[]};
+  try{
+    await readStorageStructure();
+    if(!S.userInfoTableId)return positions;
+
+    const uiObj=await suiRpc('suix_getDynamicFieldObject',[S.userInfoTableId,{type:'address',value:addr}]);
+    const ui=uiObj?.data?.content?.fields?.value?.fields;
+    if(!ui)return positions;
+
+    const collaterals=ui.collaterals||[];
+    const loans=ui.loans||[];
+    const allIds=[...new Set([...collaterals,...loans])];
+
+    for(const assetId of allIds){
+      const pool=S.poolMap[assetId];
+      if(!pool)continue;
+      const dec=pool.token?.decimals||9;
+      const oraclePrice=Number(pool.oracle?.price||0);
+      const tokenPrice=Number(pool.token?.price||oraclePrice);
+      const liqThreshold=pool.liquidationFactor?.threshold?Number(pool.liquidationFactor.threshold):null;
+
+      const reserveObj=await suiRpc('suix_getDynamicFieldObject',[S.reserveTableId,{type:'u8',value:assetId}]);
+      const rv=reserveObj?.data?.content?.fields?.value?.fields;
+      if(!rv)continue;
+
+      if(collaterals.includes(assetId)){
+        const supTableId=rv.supply_balance?.fields?.user_state?.fields?.id?.id;
+        const curIdx=BigInt(rv.current_supply_index||'1000000000000000000000000000');
+        if(supTableId){
+          try{
+            const sObj=await suiRpc('suix_getDynamicFieldObject',[supTableId,{type:'address',value:addr}]);
+            const shares=BigInt(sObj?.data?.content?.fields?.value||'0');
+            if(shares>0n){
+              const realRaw=shares*curIdx/SCALE27;
+              const realAmt=Number(realRaw)/(10**dec);
+              positions.supplies.push({asset:pool.token?.symbol||'?',amount:realAmt,valueUSD:realAmt*tokenPrice,
+                apr:Number(pool.supplyIncentiveApyInfo?.vaultApr||0),liqThreshold,pool,oraclePrice});
+            }
+          }catch(e){console.warn(`Supply read ${pool.token?.symbol}:`,e.message);}
+        }
+      }
+
+      if(loans.includes(assetId)){
+        const borTableId=rv.borrow_balance?.fields?.user_state?.fields?.id?.id;
+        const curIdx=BigInt(rv.current_borrow_index||'1000000000000000000000000000');
+        if(borTableId){
+          try{
+            const bObj=await suiRpc('suix_getDynamicFieldObject',[borTableId,{type:'address',value:addr}]);
+            const shares=BigInt(bObj?.data?.content?.fields?.value||'0');
+            if(shares>0n){
+              const realRaw=shares*curIdx/SCALE27;
+              const realAmt=Number(realRaw)/(10**dec);
+              positions.borrows.push({asset:pool.token?.symbol||'?',amount:realAmt,valueUSD:realAmt*tokenPrice,
+                apr:Number(pool.borrowIncentiveApyInfo?.vaultApr||0),pool,oraclePrice});
+            }
+          }catch(e){console.warn(`Borrow read ${pool.token?.symbol}:`,e.message);}
+        }
+      }
+    }
+  }catch(e){console.warn('fetchUserPositions:',e.message);}
+  return positions;
+}
+
+/* ── Main Loader ── */
+async function loadAllData(){
+  S.wallets=Router.parse();
+  if(!S.wallets.length){renderEmpty();return;}
+  showLoader('Fetching pool data from NAVI Protocol…');
+  S.errors=[];S.perWallet={};S.userInfoTableId=null;S.reserveTableId=null;
+
+  try{await fetchPools();}catch(e){S.errors.push('Pools: '+e.message);}
+
+  showLoader('Reading on-chain positions & balances…');
+  for(const w of S.wallets){
+    const wd={balances:[],positions:{supplies:[],borrows:[]},claimedRewards:[],voloHoldings:[]};
+    S.perWallet[w.address]=wd;
+    const [bals,rewards]=await Promise.allSettled([fetchBalances(w.address),fetchClaimedRewards(w.address)]);
+    if(bals.status==='fulfilled')wd.balances=bals.value;
+    if(rewards.status==='fulfilled')wd.claimedRewards=rewards.value;
+
+    try{wd.positions=await fetchUserPositions(w.address);}catch(e){S.errors.push(`Positions ${w.name}: ${e.message}`);}
+
+    for(const b of wd.balances){
+      if(normCT(b.coinType)===normCT(VOLO_CERT_TYPE)){
+        const amt=Number(b.balance)/1e9;
+        const vp=Object.values(S.coinTypeToPool).find(p=>(p.token?.symbol||'').toLowerCase()==='vsui');
+        const price=vp?Number(vp.token?.price||0):0;
+        wd.voloHoldings.push({amount:amt,valueUSD:amt*price,price});
+      }
+    }
+  }
+  S.lastUpdated=new Date();hideLoader();renderAll();
+}
+
+/* ── Aggregation ── */
+function agg(){
+  let tSupUSD=0,tBorUSD=0,tSupYield=0,tBorCost=0;
+  const allS=[],allB=[],allBal=[],allCl=[],allV=[];
+  for(const w of S.wallets){
+    const d=S.perWallet[w.address];if(!d)continue;
+    for(const s of d.positions.supplies){tSupUSD+=s.valueUSD;tSupYield+=s.valueUSD*s.apr/100;allS.push({...s,walletName:w.name});}
+    for(const b of d.positions.borrows){tBorUSD+=b.valueUSD;tBorCost+=b.valueUSD*b.apr/100;allB.push({...b,walletName:w.name});}
+    for(const b of d.balances){
+      const pool=S.coinTypeToPool[normCT(b.coinType)];const price=pool?Number(pool.token?.price||pool.oracle?.price||0):0;
+      const amt=Number(b.balance)/(10**b.decimals);allBal.push({...b,walletName:w.name,amount:amt,price,valueUSD:amt*price});
+    }
+    for(const r of d.claimedRewards)allCl.push({...r,walletName:w.name});
+    for(const v of d.voloHoldings){allV.push({...v,walletName:w.name});tSupUSD+=v.valueUSD;}
+  }
+  const hf=tBorUSD>0?allS.reduce((s,p)=>s+p.valueUSD*(p.liqThreshold||0),0)/tBorUSD:null;
+  return{tSupUSD,tBorUSD,netValue:tSupUSD-tBorUSD,netPnl:tSupYield-tBorCost,hf,allS,allB,allBal,allCl,allV};
+}
+
+/* ── Render All ── */
+function renderAll(){const a=agg();renderShareBar();renderYield(a);renderPositions(a);renderUnclaimed();renderMonthly(a);renderFooter();}
+
+function renderEmpty(){
+  hideLoader();
+  document.getElementById('kpi-cards').innerHTML=`<div class="mc" style="grid-column:span 4;text-align:center;padding:40px">
+    <div style="font-size:16px;font-weight:600;margin-bottom:8px">No Wallets Configured</div>
+    <div style="color:var(--t2);font-size:13px">Add wallets via URL: <code style="background:var(--sf);padding:2px 6px;border-radius:3px;font-size:11px">?wallets=0x…&names=MyWallet</code></div></div>`;
+}
+
+function renderShareBar(){
+  const el=document.getElementById('share-bar');if(!S.wallets.length){el.innerHTML='';return;}
+  const link=Router.shareLink();
+  el.innerHTML=`<div class="share-bar"><span style="font-weight:600;white-space:nowrap">Share this report:</span>
+    <input readonly value="${link}" onclick="this.select()">
+    <button class="btn btn-primary" onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>{this.textContent='Copied!'});setTimeout(()=>this.textContent='Copy Link',1500)">Copy Link</button></div>`;
+}
+
+/* ── Tab 1: Yield ── */
+function renderYield(a){
+  const{hf,netValue,netPnl,allS,allB,allV}=a;
+  const el=document.getElementById('yield-alert');
+  const hasBor=allB.length>0;
+  const cls=!hasBor?'healthy':hf<1.2?'critical':hf<1.5?'warning':'healthy';
+  const tcls=!hasBor?'at-green':hf<1.2?'at-red':hf<1.5?'at-amber':'at-green';
+  const title=!hasBor?'Supply-only · No borrow positions':hf<1.2?'CRITICAL: Near liquidation':hf<1.5?'WARNING: Monitor health factor':'Healthy';
+  el.className=`alert ${cls}`;
+  el.innerHTML=`<div class="alert-title ${tcls}">${title}</div><span style="color:var(--t2)">${!hasBor?'Zero liquidation risk.':'Health factor: '+hf.toFixed(2)}</span>`;
+
+  const hfStr=hf===null?'—':hf.toFixed(2);
+  const hfCls=hf===null?'teal':hf<1.2?'red':hf<1.5?'amber':'teal';
+  const hfSub=hf===null?'No borrows':hf<1.2?'Critical':hf<1.5?'Warning':'Safe';
+  document.getElementById('kpi-cards').innerHTML=`
+    <div class="mc"><div class="mc-lbl">Net P&L / yr</div><div class="mc-val green">${netPnl>=0?'+':''}${fUSD(netPnl)}</div><div class="mc-sub">Supply yield − borrow cost</div></div>
+    <div class="mc"><div class="mc-lbl">Total Net Value</div><div class="mc-val">${fUSD(netValue)}</div><div class="mc-sub">Supply − Borrow</div></div>
+    <div class="mc"><div class="mc-lbl">Health Factor</div><div class="mc-val ${hfCls}">${hfStr}</div><div class="mc-sub">${hfSub}</div></div>
+    <div class="mc"><div class="mc-lbl">Wallets Tracked</div><div class="mc-val teal">${S.wallets.length}</div><div class="mc-sub">${S.wallets.map(w=>w.name).join(', ')}</div></div>`;
+
+  const yb=document.getElementById('yield-body');yb.innerHTML='';
+  const row=(l,w,v,sign,c,n,bold)=>{const tr=document.createElement('tr');if(bold)tr.className='tr-total';
+    const wt=w?`<span style="margin-left:6px;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;background:var(--teal-bg);color:var(--teal-d);border:1px solid var(--teal-b)">${w}</span>`:'';
+    tr.innerHTML=`<td${bold?' style="font-weight:700"':''}>${bold?'<strong>'+l+'</strong>':l+wt}</td><td class="r ${c}">${sign}${fUSD(Math.abs(v))}</td><td style="font-size:12px;color:var(--t2)">${n}</td>`;yb.appendChild(tr);};
+
+  for(const s of allS){row('NAVI Supply Interest',s.walletName,s.valueUSD*s.apr/100,'+','vg',`${fPct(s.apr)} on ${fUSD(s.valueUSD)} · ${s.asset}`);}
+  for(const v of allV){row('Volo vSUI Holdings',v.walletName,0,'+','vm',`${fNum(v.amount,2)} vSUI ≈ ${fUSD(v.valueUSD)}`);}
+  if(!allS.length&&!allV.length)row('No supply positions',null,0,'','vm','—');
+  for(const b of allB){row('Borrow Cost',b.walletName,b.valueUSD*b.apr/100,'−','vr',`${fPct(b.apr)} on ${fUSD(b.valueUSD)} · ${b.asset}`);}
+  if(!allB.length)row('Borrow Cost',null,0,'','vm','No borrows — zero cost');
+  row('Net on-chain P&L',null,netPnl,netPnl>=0?'+':'−',netPnl>=0?'vg':'vr','Annual from current APRs',true);
+}
+
+/* ── Tab 2: Positions ── */
+function renderPositions(a){
+  const{hf,allS,allB,allBal,allV,tSupUSD,tBorUSD}=a;
+  const rb=document.getElementById('risk-body');rb.innerHTML='';
+  [{m:'Health factor',v:hf===null?'—':hf.toFixed(2),cls:hf===null?'sb-na':hf<1.2?'sb-crit':'sb-safe',st:hf===null?'N/A':hf<1.2?'CRITICAL':'SAFE'},
+   {m:'Leverage ratio',v:allB.length?((tSupUSD/(tSupUSD-tBorUSD)).toFixed(2)+':1'):'1:1',cls:allB.length?'sb-warn':'sb-safe',st:allB.length?'Leveraged':'None'},
+   {m:'Total supply',v:fUSD(tSupUSD),cls:'sb-safe',st:''},
+   {m:'Total borrow',v:allB.length?fUSD(tBorUSD):'None',cls:allB.length?'sb-warn':'sb-safe',st:allB.length?'Active':'Safe'},
+   {m:'Borrow positions',v:allB.length||'None',cls:allB.length?'sb-warn':'sb-safe',st:allB.length?'Active':'Safe'}
+  ].forEach(r=>rb.insertAdjacentHTML('beforeend',`<tr><td>${r.m}</td><td><strong>${r.v}</strong></td><td>${r.st?`<span class="sb-badge ${r.cls}">${r.st}</span>`:''}</td></tr>`));
+
+  const sb=document.getElementById('sup-body');sb.innerHTML='';
+  if(!allS.length){sb.innerHTML='<tr><td colspan="5"><div class="empty">No NAVI supply positions</div></td></tr>';}
+  else{for(const s of allS)sb.insertAdjacentHTML('beforeend',`<tr><td><div class="ac">${aiH(s.asset)}<div><div style="font-size:13px;font-weight:600">${s.asset}</div><div style="font-size:10px;color:var(--tm)">${s.walletName}</div></div></div></td><td class="r">${fNum(s.amount,2)}</td><td class="r">${fUSD(s.valueUSD)}</td><td class="r vg">${fPct(s.apr)}</td><td class="r">${s.liqThreshold!=null?(s.liqThreshold*100).toFixed(0)+'%':'—'}</td></tr>`);
+    sb.insertAdjacentHTML('beforeend',`<tr class="tr-total"><td><strong>Total</strong></td><td></td><td class="r"><strong>${fUSD(allS.reduce((s,p)=>s+p.valueUSD,0))}</strong></td><td></td><td></td></tr>`);}
+
+  const bc=document.getElementById('bor-content');
+  if(!allB.length){bc.innerHTML='<div class="empty">No borrow positions</div>';}
+  else{let h='<table><thead><tr><th>Asset</th><th class="r">Amount</th><th class="r">Value USD</th><th class="r">APR</th></tr></thead><tbody>';
+    for(const b of allB)h+=`<tr><td><div class="ac">${aiH(b.asset)}<div><div style="font-size:13px;font-weight:600">${b.asset}</div><div style="font-size:10px;color:var(--tm)">${b.walletName}</div></div></div></td><td class="r">${fNum(b.amount,2)}</td><td class="r vr">${fUSD(b.valueUSD)}</td><td class="r vr">${fPct(b.apr)}</td></tr>`;
+    h+=`<tr class="tr-total"><td><strong>Total</strong></td><td></td><td class="r vr"><strong>${fUSD(allB.reduce((s,p)=>s+p.valueUSD,0))}</strong></td><td></td></tr></tbody></table>`;bc.innerHTML=h;}
+
+  const vs=document.getElementById('sec-volo'),vb=document.getElementById('volo-body');
+  if(allV.length){vs.style.display='';vb.innerHTML='';
+    for(const w of S.wallets){const d=S.perWallet[w.address];if(!d)continue;for(const v of d.voloHoldings)vb.insertAdjacentHTML('beforeend',`<tr><td><div class="ac">${aiH('vSUI')}<div style="font-size:13px;font-weight:600">vSUI</div></div></td><td>${w.name}</td><td class="r">${fNum(v.amount,4)}</td><td class="r">${fUSD(v.valueUSD)}</td></tr>`);}
+    vb.insertAdjacentHTML('beforeend',`<tr class="tr-total"><td><strong>Total</strong></td><td></td><td></td><td class="r"><strong>${fUSD(allV.reduce((s,v)=>s+v.valueUSD,0))}</strong></td></tr>`);}
+  else vs.style.display='none';
+
+  const bb=document.getElementById('bal-body');bb.innerHTML='';
+  const sorted=allBal.filter(b=>Number(b.balance)>0).sort((a,b)=>b.valueUSD-a.valueUSD);
+  if(!sorted.length)bb.innerHTML='<tr><td colspan="5"><div class="empty">No balances</div></td></tr>';
+  else for(const b of sorted)bb.insertAdjacentHTML('beforeend',`<tr><td><div class="ac">${aiH(b.symbol)}<div style="font-size:13px;font-weight:600">${b.symbol}</div></div></td><td><span class="tag t-wal">${b.walletName}</span></td><td class="r">${fNum(b.amount,b.amount<1?6:2)}</td><td class="r vm">${b.price?'$'+fNum(b.price,b.price<1?6:2):'—'}</td><td class="r">${b.valueUSD>0.01?fUSD(b.valueUSD):'—'}</td></tr>`);
+}
+
+/* ── Tab 3: Unclaimed ── */
+function renderUnclaimed(){
+  document.getElementById('unc-cards').innerHTML=`
+    <div class="mc"><div class="mc-lbl">Unclaimed Rewards</div><div class="mc-val muted" style="font-size:16px">Requires SDK</div><div class="mc-sub">NAVI incentive contract read</div></div>
+    <div class="mc"><div class="mc-lbl">Wallets</div><div class="mc-val teal">${S.wallets.length}</div><div class="mc-sub">${S.wallets.map(w=>w.name).join(', ')}</div></div>
+    <div class="mc"><div class="mc-lbl">Common Reward Tokens</div><div class="mc-val muted" style="font-size:16px">vSUI, NAVX, DEEP</div><div class="mc-sub">NAVI incentive types</div></div>`;
+  document.getElementById('unc-body').innerHTML=`<tr><td colspan="7"><div class="empty" style="flex-direction:column;align-items:flex-start;gap:4px;padding:20px">
+    <div style="font-weight:600">Unclaimed amounts require calling NAVI incentive contracts on-chain</div>
+    <div style="font-size:12px">Check <a href="https://app.naviprotocol.io/" target="_blank" style="color:var(--teal)">app.naviprotocol.io</a> for real-time unclaimed balances.</div></div></td></tr>`;
+}
+
+/* ── Tab 4: Monthly ── */
+function renderMonthly(a){
+  const{allCl}=a;const cards=document.getElementById('monthly-cards'),tbody=document.getElementById('mo-body');
+  const byMonth={};
+  for(const r of allCl){
+    const ts=r.timestamp?new Date(r.timestamp):null;if(!ts||isNaN(ts))continue;
+    const k=`${ts.getFullYear()}-${String(ts.getMonth()+1).padStart(2,'0')}`;
+    const lbl=ts.toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+    if(!byMonth[k])byMonth[k]={k,lbl,usd:0,tokens:{},cnt:0};
+    const sym=extractSym(r.coin_type||'');const dec=KNOWN_DECIMALS[sym]||9;
+    const amt=Number(r.amount||0)/(10**dec);const price=Number(r.token_price||0);
+    byMonth[k].usd+=amt*price;byMonth[k].cnt++;
+    if(!byMonth[k].tokens[sym])byMonth[k].tokens[sym]={amount:0,usd:0};
+    byMonth[k].tokens[sym].amount+=amt;byMonth[k].tokens[sym].usd+=amt*price;
+  }
+  const months=Object.values(byMonth).sort((a,b)=>a.k.localeCompare(b.k));
+  const tot=months.reduce((s,m)=>s+m.usd,0);const best=months.length?months.reduce((a,b)=>b.usd>a.usd?b:a):null;
+
+  cards.innerHTML=`
+    <div class="mc"><div class="mc-lbl">Total Claimed</div><div class="mc-val blue" style="font-size:22px">${fUSD(tot)}</div><div class="mc-sub">${allCl.length} transactions</div></div>
+    <div class="mc"><div class="mc-lbl">Best Month</div><div class="mc-val" style="font-size:20px">${best?best.lbl:'—'}</div><div class="mc-sub">${best?fUSD(best.usd):'No data'}</div></div>
+    <div class="mc"><div class="mc-lbl">Months Active</div><div class="mc-val teal" style="font-size:22px">${months.length}</div><div class="mc-sub">On-chain records</div></div>`;
+
+  tbody.innerHTML='';
+  if(!months.length){tbody.innerHTML=`<tr><td colspan="5"><div class="empty">No claim transactions found for these addresses</div></td></tr>`;}
+  else{let sum=0;for(const m of months){sum+=m.usd;
+    const tl=Object.entries(m.tokens).map(([s,d])=>`${fNum(d.amount,0)} ${s}`).join(', ');
+    const ta=Object.values(m.tokens).reduce((s,t)=>s+t.amount,0);
+    tbody.insertAdjacentHTML('beforeend',`<tr><td>${m.lbl}</td><td class="r vg">${fUSD(m.usd)}</td><td style="font-size:11px;color:var(--t2)">${tl}</td><td class="r vm">${ta>0?'$'+fNum(m.usd/ta,4):'—'}</td><td class="r" style="font-weight:600">${fUSD(m.usd)}</td></tr>`);}
+    tbody.insertAdjacentHTML('beforeend',`<tr class="tr-total"><td>Total</td><td class="r vg">${fUSD(sum)}</td><td></td><td></td><td class="r">${fUSD(sum)}</td></tr>`);}
+
+  if(S.chartInst){S.chartInst.destroy();S.chartInst=null;}
+  const ctx=document.getElementById('rwd-chart');
+  if(!ctx||!months.length||typeof Chart==='undefined')return;
+  S.chartInst=new Chart(ctx,{type:'bar',data:{labels:months.map(m=>m.lbl),datasets:[{label:'Claimed (USD)',data:months.map(m=>m.usd),backgroundColor:'rgba(37,99,235,.75)',borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fUSD(c.parsed.y)}}},
+    scales:{x:{ticks:{color:'#94a3b8',font:{size:11}},grid:{display:false}},y:{beginAtZero:true,ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',color:'#94a3b8',font:{size:11}},grid:{color:'#eef1f5'}}}}});
+}
+
+function renderFooter(){
+  const ts=S.lastUpdated?S.lastUpdated.toLocaleTimeString():'—';
+  document.getElementById('ft-txt').textContent=`Last updated: ${ts} · NAVI Open API + SUI RPC · All data on-chain real-time`;
+  document.getElementById('sb-status').textContent=`Live · ${ts}`;
+}
+
+/* ── Sidebar ── */
+const NAV=[
+  {id:'yield',label:'Yield Analysis',sub:'P&L Summary',icon:'<svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>'},
+  {id:'positions',label:'Positions',sub:'NAVI + Volo',icon:'<svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/></svg>'},
+  {id:'unclaimed',label:'Unclaimed',sub:'Claimable Now',icon:'<svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 1.5" stroke-linecap="round"/></svg>'},
+  {id:'monthly',label:'Monthly Rewards',sub:'Claim History',icon:'<svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,12 5,8 8,10 12,4 14,6"/></svg>'}
+];
+
+function buildSidebar(){
+  const si=document.getElementById('sb-inner');si.innerHTML='';
+  NAV.forEach(n=>{const b=document.createElement('button');b.className='ni'+(n.id==='yield'?' active':'');b.dataset.panel=n.id;
+    b.innerHTML=`${n.icon}<span><span class="ni-lm">${n.label}</span><span class="ni-ls">${n.sub}</span></span>`;b.onclick=()=>showPanel(n.id);si.appendChild(b);});
+  si.insertAdjacentHTML('beforeend','<div class="nd"></div><div class="ns-lbl">Wallets</div>');
+  const ww=document.createElement('div');ww.id='wl-wrap';si.appendChild(ww);renderWalletList();
+  si.insertAdjacentHTML('beforeend',`
+    <div class="wmgr-toggle" onclick="document.getElementById('wmgr-panel').classList.toggle('open')">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v4M4 6h4" stroke-linecap="round"/></svg> Manage Wallets</div>
+    <div class="wmgr-panel" id="wmgr-panel">
+      <div style="font-size:11px;font-weight:700;margin-bottom:8px">Add / Remove Wallet</div>
+      <input class="wm-inp" id="wm-code" type="password" placeholder="Verification code" autocomplete="off">
+      <input class="wm-inp" id="wm-name" placeholder="Wallet name">
+      <input class="wm-inp" id="wm-addr" placeholder="0x… SUI address" style="font-family:monospace;font-size:10px">
+      <button class="wm-btn" onclick="addWallet()">+ Add Wallet</button>
+      <div style="font-size:10px;color:var(--tm);margin:6px 0 4px">Remove:</div>
+      <select class="wm-inp" id="wm-rm-sel" style="cursor:pointer"></select>
+      <button class="wm-btn sec" onclick="removeWallet()">Remove Selected</button>
+      <div class="wm-msg" id="wm-msg"></div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)">
+        <div style="font-size:11px;font-weight:700;margin-bottom:6px">Share Report Link</div>
+        <div style="display:flex;gap:4px"><input class="wm-inp" id="share-url" readonly style="margin:0;font-family:monospace;font-size:9px;flex:1">
+        <button class="wm-btn" style="width:auto;padding:0 10px;margin:0" onclick="copyShareLink()">Copy</button></div></div></div>`);
+  syncRemoveSel();updateShareUrl();
+}
+
+function renderWalletList(){const w=document.getElementById('wl-wrap');if(!w)return;w.innerHTML='';
+  S.wallets.forEach(v=>w.insertAdjacentHTML('beforeend',`<div class="wi"><div class="wi-name">${v.name}</div><div class="wi-row"><span class="wi-addr" title="${v.address}">${shortAddr(v.address)}</span><span class="wi-acts"><button class="wi-btn" onclick="cpAddr('${v.address}',this)" title="Copy"><svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="3.5" width="6" height="6" rx="1"/><path d="M1.5 7.5V1.5h6"/></svg></button><a class="wi-btn" href="https://suivision.xyz/account/${v.address}" target="_blank" title="SuiVision"><svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 9.5L9.5 1.5M6 1.5h3.5v3.5"/></svg></a></span></div></div>`));}
+function syncRemoveSel(){const s=document.getElementById('wm-rm-sel');if(!s)return;s.innerHTML='';S.wallets.forEach((w,i)=>s.insertAdjacentHTML('beforeend',`<option value="${i}">${w.name} (${shortAddr(w.address)})</option>`));}
+function updateShareUrl(){const e=document.getElementById('share-url');if(e)e.value=Router.shareLink();}
+function wmMsg(t,ok){const e=document.getElementById('wm-msg');if(!e)return;e.textContent=t;e.className='wm-msg'+(ok?' ok':'');setTimeout(()=>e.textContent='',3000);}
+function checkCode(){return(document.getElementById('wm-code')?.value||'').trim()===EDIT_CODE||(wmMsg('Incorrect code.'),false);}
+function addWallet(){if(!checkCode())return;const n=(document.getElementById('wm-name')?.value||'').trim(),a=(document.getElementById('wm-addr')?.value||'').trim();
+  if(!n){wmMsg('Enter name.');return;}if(!a.startsWith('0x')||a.length<20){wmMsg('Invalid address.');return;}if(S.wallets.find(w=>w.address===a)){wmMsg('Already exists.');return;}
+  S.wallets.push({name:n,address:a});Router.update(S.wallets);renderWalletList();syncRemoveSel();updateShareUrl();
+  document.getElementById('wm-name').value='';document.getElementById('wm-addr').value='';wmMsg(n+' added.',true);loadAllData();}
+function removeWallet(){if(!checkCode())return;const s=document.getElementById('wm-rm-sel');if(!s||!S.wallets.length)return;
+  const r=S.wallets.splice(+s.value,1)[0];Router.update(S.wallets);renderWalletList();syncRemoveSel();updateShareUrl();wmMsg(r.name+' removed.',true);loadAllData();}
+function copyShareLink(){navigator.clipboard.writeText(Router.shareLink()).then(()=>wmMsg('Copied!',true)).catch(()=>{});}
+function cpAddr(a,b){navigator.clipboard.writeText(a).then(()=>{const o=b.innerHTML;b.innerHTML='<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 5.5l2.5 2.5 4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';setTimeout(()=>b.innerHTML=o,1500);}).catch(()=>{});}
+function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='p-'+id));document.querySelectorAll('.ni[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===id));}
+function showLoader(m){document.getElementById('loader-msg').textContent=m||'Loading…';document.getElementById('loader').classList.add('show');}
+function hideLoader(){document.getElementById('loader').classList.remove('show');}
+async function refreshData(){await loadAllData();}
+
+/* ── Boot ── */
+S.wallets=Router.parse();
+buildSidebar();
+loadAllData();
+</script>
+</body>
+</html>
