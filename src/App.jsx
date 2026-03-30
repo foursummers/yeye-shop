@@ -133,19 +133,24 @@ function ProductModal({ product, onSave, onClose }) {
     setUploading(true);
     try {
       if (supabase) {
-        const url = await uploadImage(file);
-        const newImgs = [...(form.imgs||[])];
-        newImgs[idx] = url;
-        f("imgs", newImgs);
-      } else {
-        const reader = new FileReader();
-        reader.onload = ev => {
+        try {
+          const url = await uploadImage(file);
           const newImgs = [...(form.imgs||[])];
-          newImgs[idx] = ev.target.result;
+          newImgs[idx] = url;
           f("imgs", newImgs);
-        };
-        reader.readAsDataURL(file);
+          setUploading(false);
+          return;
+        } catch (_) { /* Storage full or failed, fall through to base64 */ }
       }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const newImgs = [...(form.imgs||[])];
+        newImgs[idx] = ev.target.result;
+        f("imgs", newImgs);
+        setUploading(false);
+      };
+      reader.readAsDataURL(file);
+      return;
     } catch (e) {
       alert("上传失败: " + e.message);
     }
@@ -337,6 +342,14 @@ export default function App() {
             await supabase.from("products").upsert(seedDb, { onConflict: "id" });
             const { data: refetch } = await supabase.from("products").select("*").order("created_at");
             pRows = refetch || [];
+          } else {
+            const dbIds = new Set(pRows.map(r=>r.id));
+            const missing = SEED_PRODUCTS.filter(p=>!dbIds.has(p.id));
+            if (missing.length > 0) {
+              await supabase.from("products").upsert(missing.map(productToDb), { onConflict: "id" });
+              const { data: refetch } = await supabase.from("products").select("*").order("created_at");
+              pRows = refetch || pRows;
+            }
           }
           setProducts(pRows.map(dbToProduct));
           const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });

@@ -122,7 +122,7 @@ export const PRODUCTS = [
   {"id":"LTB14NL5L","n":"不锈钢缓降垃圾桶 5L","cat":"垃圾桶","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10100.jpg"],"desc":"不锈钢缓降垃圾桶 5L小巧（5L）","recommended":false,"hidden":false},
   {"id":"LTB670W0150L","n":"白色感应垃圾桶 50L","cat":"垃圾桶","cost":71,"tb":299,"st":8,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10101.jpg"],"desc":"红外感应自动开盖，白色简洁设计，含内桶+贴纸，50L客厅首选（39×29×60 cm / 50L）","recommended":false,"hidden":false},
   {"id":"TBP022G01","n":"凉感褶棉化纤枕 灰色","cat":"床上用品","cost":29,"tb":99,"st":279,"loc":"工厂","note":"","season":"Q1 2025","imgs":[],"desc":"凉感褶棉化纤枕，灰色，80x80cm（80×80×18 cm）","recommended":false,"hidden":false},
-  {"id":"TBP024W01","n":"凉感化纤枕 白色 两件装","cat":"床上用品","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10120.jpg"],"desc":"凉感化纤枕白色两件装（50×70 cm ×2）","recommended":false,"hidden":false},
+  {"id":"TBP024W01","n":"凉感化纤枕 白色 两件装","cat":"床上用品","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/tbp024w01.jpg"],"desc":"凉感化纤枕白色两件装（50×70 cm ×2）","recommended":false,"hidden":false},
   {"id":"TDC033W01","n":"泡泡纱化纤被 King","cat":"床上用品","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10124.jpg"],"desc":"泡泡纱化纤被 King尺寸（King）","recommended":false,"hidden":false},
   {"id":"LLD201WT","n":"竹制显示器增高架 白色","cat":"家居收纳","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10040.jpg"],"desc":"竹制显示器增高架，白色，桌面整理","recommended":false,"hidden":false},
   {"id":"LBC059C01","n":"岛台高度靠背咖啡色吧椅 2件","cat":"家具","cost":0,"tb":0,"st":0,"loc":"工厂","note":"","season":"Q1 2025","imgs":["/images/10085.jpg"],"desc":"岛台高度靠背咖啡色吧椅 2件装","recommended":false,"hidden":false},
