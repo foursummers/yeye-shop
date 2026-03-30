@@ -334,45 +334,43 @@ export default function App() {
   useEffect(() => {
     (async () => {
       if (!supabase) {
+        console.warn("[yeye] Supabase 未配置，使用本地数据");
         setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
         setOrders(lsGet("yeye_o", []));
         setLoading(false);
         return;
       }
-      let connected = false;
+      let pOk = false, oOk = false;
       try {
-        let { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
+        const { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
         if (pErr) throw pErr;
         if (pRows.length === 0) {
+          console.log("[yeye] 数据库为空，导入种子数据...");
           const seedDb = SEED_PRODUCTS.map(productToDb);
-          await supabase.from("products").upsert(seedDb, { onConflict: "id" });
+          const { error: seedErr } = await supabase.from("products").upsert(seedDb, { onConflict: "id" });
+          if (seedErr) console.warn("[yeye] 种子导入失败(非致命):", seedErr.message);
           const { data: refetch } = await supabase.from("products").select("*").order("created_at");
-          pRows = refetch || [];
+          setProducts((refetch||[]).map(dbToProduct));
         } else {
-          const dbIds = new Set(pRows.map(r=>r.id));
-          const missing = SEED_PRODUCTS.filter(p=>!dbIds.has(p.id));
-          if (missing.length > 0) {
-            await supabase.from("products").upsert(missing.map(productToDb), { onConflict: "id" });
-            const { data: refetch } = await supabase.from("products").select("*").order("created_at");
-            pRows = refetch || pRows;
-          }
+          setProducts(pRows.map(dbToProduct));
         }
-        setProducts(pRows.map(dbToProduct));
-        connected = true;
+        pOk = true;
+        console.log("[yeye] 商品加载成功");
       } catch (e) {
-        console.warn("商品加载失败:", e.message);
+        console.error("[yeye] 商品加载失败:", e.message, "| 回退到本地数据");
         setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
       }
       try {
         const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
         if (oErr) throw oErr;
         setOrders(oRows.map(dbToOrder));
-        connected = true;
+        oOk = true;
+        console.log("[yeye] 订单加载成功");
       } catch (e) {
-        console.warn("订单加载失败:", e.message);
+        console.error("[yeye] 订单加载失败:", e.message, "| 回退到本地数据");
         setOrders(lsGet("yeye_o", []));
       }
-      setDbMode(connected);
+      setDbMode(pOk || oOk);
       setLoading(false);
     })();
   }, []);
@@ -434,10 +432,18 @@ export default function App() {
     if(!form.id||!form.n) return alert("请填写编号和名称");
     if(editProduct==="new") {
       setProducts(p=>[...p,form]);
-      if(db){ const{error}=await db.from("products").insert(productToDb(form)); if(error)alert("写入失败: "+error.message); else if(!dbMode)setDbMode(true); }
+      if(db){
+        const{error}=await db.from("products").insert(productToDb(form));
+        if(error){ console.error("[yeye] 写入失败:",error); alert("写入失败: "+error.message+"\n\n如持续出现请检查 Supabase API key 配置"); }
+        else if(!dbMode) setDbMode(true);
+      }
     } else {
       setProducts(p=>p.map(x=>x.id===form.id?form:x));
-      if(db){ const{error}=await db.from("products").update(productToDb(form)).eq("id",form.id); if(error)alert("更新失败: "+error.message); else if(!dbMode)setDbMode(true); }
+      if(db){
+        const{error}=await db.from("products").update(productToDb(form)).eq("id",form.id);
+        if(error){ console.error("[yeye] 更新失败:",error); alert("更新失败: "+error.message+"\n\n如持续出现请检查 Supabase API key 配置"); }
+        else if(!dbMode) setDbMode(true);
+      }
     }
     setEditProduct(null);
   }
@@ -727,9 +733,9 @@ export default function App() {
                   ))}
                 </div>
               </div>
-              {dbMode&&<div style={{ fontSize:9, color:"#0f6e56", marginBottom:12, padding:"4px 8px", background:"#e1f5ee", borderRadius:4, display:"inline-block" }}>已连接 Supabase · 数据实时同步</div>}
-              {!dbMode&&db&&<div style={{ fontSize:9, color:"#854f0b", marginBottom:12, padding:"4px 8px", background:"#faeeda", borderRadius:4, display:"inline-block" }}>Supabase 已配置 · 写入会自动同步</div>}
-              {!db&&<div style={{ fontSize:9, color:"#a32d2d", marginBottom:12, padding:"4px 8px", background:"#fcebeb", borderRadius:4, display:"inline-block" }}>离线模式 · 请配置 .env</div>}
+              {dbMode&&<div style={{ fontSize:9, color:"#0f6e56", marginBottom:12, padding:"4px 8px", background:"#e1f5ee", borderRadius:4, display:"inline-block" }}>✓ 已连接 Supabase · 数据实时同步 · 商品{products.length}件</div>}
+              {!dbMode&&db&&<div style={{ fontSize:9, color:"#854f0b", marginBottom:12, padding:"4px 8px", background:"#faeeda", borderRadius:4, display:"inline-flex", alignItems:"center", gap:8 }}>⚠ Supabase 已配置但连接异常 <button onClick={async()=>{try{const{data,error}=await db.from("products").select("id",{count:"exact",head:true});alert(error?"诊断结果: "+error.message+"\n\ncode: "+error.code+"\nhint: "+(error.hint||"无")+"\n\n请检查 Supabase API key 是否正确":"连接正常! 请刷新页面重试")}catch(e){alert("网络错误: "+e.message)}}} style={{ background:"#854f0b", color:"#fff", border:"none", borderRadius:3, fontSize:9, padding:"2px 6px", cursor:"pointer" }}>诊断连接</button></div>}
+              {!db&&<div style={{ fontSize:9, color:"#a32d2d", marginBottom:12, padding:"4px 8px", background:"#fcebeb", borderRadius:4, display:"inline-block" }}>✗ 离线模式 · 请配置 .env 环境变量</div>}
 
               {/* FILTER BAR (shared by kanban & orders) */}
               {(adminTab==="kanban"||adminTab==="orders")&&(
