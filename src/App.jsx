@@ -308,6 +308,7 @@ export default function App() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dbMode, setDbMode] = useState(false);
+  const [connError, setConnError] = useState(null);
 
   const [page, setPage] = useState("shop");
   const [adminTab, setAdminTab] = useState("kanban");
@@ -330,50 +331,49 @@ export default function App() {
   const [orderProdFilter, setOrderProdFilter] = useState("");
   const scrollPos = useRef(0);
 
-  // ── Load data on mount ───────────────────────────────────
-  useEffect(() => {
-    (async () => {
-      if (!supabase) {
-        console.warn("[yeye] Supabase 未配置，使用本地数据");
-        setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
-        setOrders(lsGet("yeye_o", []));
-        setLoading(false);
-        return;
-      }
-      let pOk = false, oOk = false;
-      try {
-        const { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
-        if (pErr) throw pErr;
-        if (pRows.length === 0) {
-          console.log("[yeye] 数据库为空，导入种子数据...");
-          const seedDb = SEED_PRODUCTS.map(productToDb);
-          const { error: seedErr } = await supabase.from("products").upsert(seedDb, { onConflict: "id" });
-          if (seedErr) console.warn("[yeye] 种子导入失败(非致命):", seedErr.message);
-          const { data: refetch } = await supabase.from("products").select("*").order("created_at");
-          setProducts((refetch||[]).map(dbToProduct));
-        } else {
-          setProducts(pRows.map(dbToProduct));
-        }
-        pOk = true;
-        console.log("[yeye] 商品加载成功");
-      } catch (e) {
-        console.error("[yeye] 商品加载失败:", e.message, "| 回退到本地数据");
-        setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
-      }
-      try {
-        const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
-        if (oErr) throw oErr;
-        setOrders(oRows.map(dbToOrder));
-        oOk = true;
-        console.log("[yeye] 订单加载成功");
-      } catch (e) {
-        console.error("[yeye] 订单加载失败:", e.message, "| 回退到本地数据");
-        setOrders(lsGet("yeye_o", []));
-      }
-      setDbMode(pOk || oOk);
+  async function loadFromSupabase() {
+    if (!supabase) {
+      setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
+      setOrders(lsGet("yeye_o", []));
       setLoading(false);
-    })();
-  }, []);
+      setConnError("env");
+      return;
+    }
+    setConnError(null);
+    let pOk = false, oOk = false, errMsg = "";
+    try {
+      const { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
+      if (pErr) throw pErr;
+      if (pRows.length === 0) {
+        const seedDb = SEED_PRODUCTS.map(productToDb);
+        const { error: seedErr } = await supabase.from("products").upsert(seedDb, { onConflict: "id" });
+        if (seedErr) console.warn("[yeye] seed:", seedErr.message);
+        const { data: refetch } = await supabase.from("products").select("*").order("created_at");
+        setProducts((refetch||[]).map(dbToProduct));
+      } else {
+        setProducts(pRows.map(dbToProduct));
+      }
+      pOk = true;
+    } catch (e) {
+      errMsg += "商品: " + e.message + "; ";
+      setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
+    }
+    try {
+      const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
+      if (oErr) throw oErr;
+      setOrders(oRows.map(dbToOrder));
+      oOk = true;
+    } catch (e) {
+      errMsg += "订单: " + e.message;
+      setOrders(lsGet("yeye_o", []));
+    }
+    setDbMode(pOk || oOk);
+    if (!pOk && !oOk) setConnError(errMsg || "unknown");
+    setLoading(false);
+  }
+
+  // ── Load data on mount ───────────────────────────────────
+  useEffect(() => { loadFromSupabase(); }, []);
 
   // ── Sync to localStorage when not using DB ────────────────
   useEffect(() => { if (!dbMode && !loading) { lsSet("yeye_p3", products); } }, [products, dbMode, loading]);
@@ -532,6 +532,21 @@ export default function App() {
 
   return (
     <div style={{ fontFamily:"system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif", minHeight:"100vh", background:S.bg, maxWidth:500, margin:"0 auto" }}>
+
+      {connError&&!loading&&(
+        <div style={{ position:"fixed", top:0, left:0, right:0, zIndex:400, background:"#fcebeb", borderBottom:"2px solid #f5c6cb", padding:"10px 16px", maxWidth:500, margin:"0 auto" }}>
+          <div style={{ fontSize:11, color:"#a32d2d", fontWeight:600, marginBottom:4 }}>⚠ 数据库连接失败（数据仅保存在本地）</div>
+          {connError==="env"?(
+            <div style={{ fontSize:10, color:"#854f0b" }}>VITE_SUPABASE_URL 或 VITE_SUPABASE_ANON_KEY 未配置</div>
+          ):(
+            <div style={{ fontSize:10, color:"#666", wordBreak:"break-all" }}>错误: {connError}</div>
+          )}
+          <div style={{ display:"flex", gap:6, marginTop:6 }}>
+            <button onClick={()=>{setLoading(true);setConnError(null);loadFromSupabase();}} style={{ fontSize:10, padding:"4px 10px", background:"#a32d2d", color:"#fff", border:"none", borderRadius:3, cursor:"pointer" }}>重试连接</button>
+            <button onClick={()=>setConnError(null)} style={{ fontSize:10, padding:"4px 10px", background:"#fff", color:"#999", border:"1px solid #ddd", borderRadius:3, cursor:"pointer" }}>忽略</button>
+          </div>
+        </div>
+      )}
 
       {shareTarget&&<ShareModal prod={shareTarget} onClose={()=>setShareTarget(null)} allProds={products}/>}
       {editProduct&&<ProductModal product={editProduct==="new"?null:editProduct} onSave={saveProduct} onClose={()=>setEditProduct(null)}/>}
