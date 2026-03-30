@@ -333,38 +333,46 @@ export default function App() {
   // ── Load data on mount ───────────────────────────────────
   useEffect(() => {
     (async () => {
-      if (supabase) {
-        try {
-          let { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
-          if (pErr) throw pErr;
-          if (pRows.length === 0) {
-            const seedDb = SEED_PRODUCTS.map(productToDb);
-            await supabase.from("products").upsert(seedDb, { onConflict: "id" });
-            const { data: refetch } = await supabase.from("products").select("*").order("created_at");
-            pRows = refetch || [];
-          } else {
-            const dbIds = new Set(pRows.map(r=>r.id));
-            const missing = SEED_PRODUCTS.filter(p=>!dbIds.has(p.id));
-            if (missing.length > 0) {
-              await supabase.from("products").upsert(missing.map(productToDb), { onConflict: "id" });
-              const { data: refetch } = await supabase.from("products").select("*").order("created_at");
-              pRows = refetch || pRows;
-            }
-          }
-          setProducts(pRows.map(dbToProduct));
-          const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
-          if (oErr) throw oErr;
-          setOrders(oRows.map(dbToOrder));
-          setDbMode(true);
-        } catch (e) {
-          console.warn("Supabase 加载失败，回退 localStorage:", e.message);
-          setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
-          setOrders(lsGet("yeye_o", []));
-        }
-      } else {
+      if (!supabase) {
         setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
         setOrders(lsGet("yeye_o", []));
+        setLoading(false);
+        return;
       }
+      let connected = false;
+      try {
+        let { data: pRows, error: pErr } = await supabase.from("products").select("*").order("created_at");
+        if (pErr) throw pErr;
+        if (pRows.length === 0) {
+          const seedDb = SEED_PRODUCTS.map(productToDb);
+          await supabase.from("products").upsert(seedDb, { onConflict: "id" });
+          const { data: refetch } = await supabase.from("products").select("*").order("created_at");
+          pRows = refetch || [];
+        } else {
+          const dbIds = new Set(pRows.map(r=>r.id));
+          const missing = SEED_PRODUCTS.filter(p=>!dbIds.has(p.id));
+          if (missing.length > 0) {
+            await supabase.from("products").upsert(missing.map(productToDb), { onConflict: "id" });
+            const { data: refetch } = await supabase.from("products").select("*").order("created_at");
+            pRows = refetch || pRows;
+          }
+        }
+        setProducts(pRows.map(dbToProduct));
+        connected = true;
+      } catch (e) {
+        console.warn("商品加载失败:", e.message);
+        setProducts(lsGet("yeye_p3", SEED_PRODUCTS));
+      }
+      try {
+        const { data: oRows, error: oErr } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
+        if (oErr) throw oErr;
+        setOrders(oRows.map(dbToOrder));
+        connected = true;
+      } catch (e) {
+        console.warn("订单加载失败:", e.message);
+        setOrders(lsGet("yeye_o", []));
+      }
+      setDbMode(connected);
       setLoading(false);
     })();
   }, []);
@@ -403,7 +411,7 @@ export default function App() {
     const now=new Date(),date=now.toLocaleDateString("zh-CN"),time=now.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
     const newOrders=cart.map((item,i)=>({id:gid+"-"+(i+1),prodId:item.prodId,qty:item.qty,wechat:info.wechat,name:info.name,phone:info.phone||"",addr:info.addr,note:info.note||"",status:"pending",paidAmt:0,date,time,groupId:gid}));
     setOrders(o=>[...newOrders,...o]);
-    if(dbMode){const{error}=await supabase.from("orders").insert(newOrders.map(orderToDb));if(error)alert("订单提交失败: "+error.message);}
+    if(db){const{error}=await db.from("orders").insert(newOrders.map(orderToDb));if(error)alert("订单提交失败: "+error.message);}
     setMyWechat(info.wechat);lsSet("yeye_mywx",info.wechat);
     setCart([]);setShowCheckout(false);setPage("myorders");
   }
@@ -411,23 +419,25 @@ export default function App() {
   async function cancelGroup(groupId) {
     if(!confirm("确认取消该订单？"))return;
     setOrders(o=>o.map(x=>x.groupId===groupId?{...x,status:"cancelled"}:x));
-    if(dbMode) await supabase.from("orders").update({status:"cancelled"}).eq("group_id",groupId);
+    if(db) await db.from("orders").update({status:"cancelled"}).eq("group_id",groupId);
   }
 
   async function markGroupShipped(groupId) {
     setOrders(o=>o.map(x=>x.groupId===groupId&&x.status==="paid"?{...x,status:"shipped"}:x));
-    if(dbMode) await supabase.from("orders").update({status:"shipped"}).eq("group_id",groupId).eq("status","paid");
+    if(db) await db.from("orders").update({status:"shipped"}).eq("group_id",groupId).eq("status","paid");
   }
+
+  const db = supabase;
 
   // ── Product CRUD ──────────────────────────────────────────
   async function saveProduct(form) {
     if(!form.id||!form.n) return alert("请填写编号和名称");
     if(editProduct==="new") {
       setProducts(p=>[...p,form]);
-      if(dbMode) { const { error } = await supabase.from("products").insert(productToDb(form)); if(error) alert("数据库写入失败: "+error.message); }
+      if(db){ const{error}=await db.from("products").insert(productToDb(form)); if(error)alert("写入失败: "+error.message); else if(!dbMode)setDbMode(true); }
     } else {
       setProducts(p=>p.map(x=>x.id===form.id?form:x));
-      if(dbMode) { const { error } = await supabase.from("products").update(productToDb(form)).eq("id",form.id); if(error) alert("数据库更新失败: "+error.message); }
+      if(db){ const{error}=await db.from("products").update(productToDb(form)).eq("id",form.id); if(error)alert("更新失败: "+error.message); else if(!dbMode)setDbMode(true); }
     }
     setEditProduct(null);
   }
@@ -435,7 +445,7 @@ export default function App() {
   async function deleteProduct(id) {
     if(!confirm("确认删除该商品？")) return;
     setProducts(p=>p.filter(x=>x.id!==id));
-    if(dbMode) await supabase.from("products").delete().eq("id",id);
+    if(db) await db.from("products").delete().eq("id",id);
   }
 
   async function toggleRecommend(id) {
@@ -443,7 +453,7 @@ export default function App() {
     if(!prod) return;
     const next = !prod.recommended;
     setProducts(p=>p.map(x=>x.id===id?{...x,recommended:next}:x));
-    if(dbMode) await supabase.from("products").update({recommended:next}).eq("id",id);
+    if(db) await db.from("products").update({recommended:next}).eq("id",id);
   }
 
   async function toggleHidden(id) {
@@ -451,7 +461,7 @@ export default function App() {
     if(!prod) return;
     const next = !prod.hidden;
     setProducts(p=>p.map(x=>x.id===id?{...x,hidden:next}:x));
-    if(dbMode) await supabase.from("products").update({hidden:next}).eq("id",id);
+    if(db) await db.from("products").update({hidden:next}).eq("id",id);
   }
 
   async function batchDelistSeason(season) {
@@ -459,7 +469,7 @@ export default function App() {
     if(!ids.length) return alert("该季度没有可下架的商品");
     if(!confirm(`确认批量下架「${season}」的 ${ids.length} 件在架商品？`)) return;
     setProducts(p=>p.map(x=>x.season===season?{...x,hidden:true}:x));
-    if(dbMode) await supabase.from("products").update({hidden:true}).in("id",ids);
+    if(db) await db.from("products").update({hidden:true}).in("id",ids);
   }
 
   async function batchRelistSeason(season) {
@@ -467,7 +477,7 @@ export default function App() {
     if(!ids.length) return alert("该季度没有已下架的商品");
     if(!confirm(`确认批量重新上架「${season}」的 ${ids.length} 件商品？`)) return;
     setProducts(p=>p.map(x=>x.season===season?{...x,hidden:false}:x));
-    if(dbMode) await supabase.from("products").update({hidden:false}).in("id",ids);
+    if(db) await db.from("products").update({hidden:false}).in("id",ids);
   }
 
   // ── Order CRUD ────────────────────────────────────────────
@@ -476,10 +486,10 @@ export default function App() {
     const newO = { ...form, id:form.id||(Date.now().toString(36).slice(-5).toUpperCase()), date:form.date||new Date().toLocaleDateString("zh-CN"), time:form.time||new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"}) };
     if(editOrder?.id) {
       setOrders(o=>o.map(x=>x.id===newO.id?newO:x));
-      if(dbMode) await supabase.from("orders").update(orderToDb(newO)).eq("id",newO.id);
+      if(db) await db.from("orders").update(orderToDb(newO)).eq("id",newO.id);
     } else {
       setOrders(o=>[newO,...o]);
-      if(dbMode) await supabase.from("orders").insert(orderToDb(newO));
+      if(db) await db.from("orders").insert(orderToDb(newO));
     }
     setEditOrder(null);
   }
@@ -487,12 +497,12 @@ export default function App() {
   async function deleteOrder(id) {
     if(!confirm("确认删除？")) return;
     setOrders(o=>o.filter(x=>x.id!==id));
-    if(dbMode) await supabase.from("orders").delete().eq("id",id);
+    if(db) await db.from("orders").delete().eq("id",id);
   }
 
   async function updateStatus(id, status) {
     setOrders(o=>o.map(x=>x.id===id?{...x,status}:x));
-    if(dbMode) await supabase.from("orders").update({status}).eq("id",id);
+    if(db) await db.from("orders").update({status}).eq("id",id);
   }
 
   const openDetail = useCallback(p=>{scrollPos.current=window.scrollY||0;setDetail(p);setDetailQty(1);window.scrollTo(0,0);},[]);
@@ -544,7 +554,7 @@ export default function App() {
       {page==="shop"&&!dp&&(
         <div style={{ padding:"16px" }}>
           <input value={searchQ} onChange={e=>setSearchQ(e.target.value)} placeholder="搜索商品名称或编号" style={{ ...S.input, marginBottom:14 }}/>
-          <div style={{ display:"flex", gap:16, overflowX:"auto", marginBottom:6, scrollbarWidth:"none" }}>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:"4px 14px", marginBottom:6 }}>
             {cats.map(c=>(<button key={c} onClick={()=>setCatFilter(c)} style={{ flexShrink:0, background:"none", border:"none", cursor:"pointer", fontSize:11, color:catFilter===c?"#111":"#bbb", borderBottom:catFilter===c?"1.5px solid #111":"1.5px solid transparent", padding:"5px 0" }}>{c}</button>))}
           </div>
           <div style={{ display:"flex", gap:10, overflowX:"auto", marginBottom:14, scrollbarWidth:"none" }}>
@@ -718,7 +728,8 @@ export default function App() {
                 </div>
               </div>
               {dbMode&&<div style={{ fontSize:9, color:"#0f6e56", marginBottom:12, padding:"4px 8px", background:"#e1f5ee", borderRadius:4, display:"inline-block" }}>已连接 Supabase · 数据实时同步</div>}
-              {!dbMode&&<div style={{ fontSize:9, color:"#854f0b", marginBottom:12, padding:"4px 8px", background:"#faeeda", borderRadius:4, display:"inline-block" }}>本地模式 · 配置 .env 连接数据库</div>}
+              {!dbMode&&db&&<div style={{ fontSize:9, color:"#854f0b", marginBottom:12, padding:"4px 8px", background:"#faeeda", borderRadius:4, display:"inline-block" }}>Supabase 已配置 · 写入会自动同步</div>}
+              {!db&&<div style={{ fontSize:9, color:"#a32d2d", marginBottom:12, padding:"4px 8px", background:"#fcebeb", borderRadius:4, display:"inline-block" }}>离线模式 · 请配置 .env</div>}
 
               {/* FILTER BAR (shared by kanban & orders) */}
               {(adminTab==="kanban"||adminTab==="orders")&&(
