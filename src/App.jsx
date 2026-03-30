@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { PRODUCTS as SEED_PRODUCTS } from "./data/products";
-import { supabase, uploadImage } from "./lib/supabase";
+import { supabase, uploadImage, makeClient, SUPABASE_URL, SUPABASE_KEY } from "./lib/supabase";
 
 const MARGIN = 1.38;
 const ADMIN_HASH = "19dcc6013b6683a7b8d74a07bceaa774860032470eb978c49fd323050707cad9";
@@ -329,6 +329,11 @@ export default function App() {
   const [addedTip, setAddedTip] = useState(false);
   const [orderWxFilter, setOrderWxFilter] = useState("");
   const [orderProdFilter, setOrderProdFilter] = useState("");
+  const [runtimeDb, setRuntimeDb] = useState(null);
+  const [settingsKey, setSettingsKey] = useState("");
+  const [settingsUrl, setSettingsUrl] = useState("");
+  const [diagResult, setDiagResult] = useState(null);
+  const [syncStatus, setSyncStatus] = useState(null);
   const scrollPos = useRef(0);
 
   async function loadFromSupabase() {
@@ -370,6 +375,143 @@ export default function App() {
     setDbMode(pOk || oOk);
     if (!pOk && !oOk) setConnError(errMsg || "unknown");
     setLoading(false);
+  }
+
+  // ── API Key Diagnostics ─────────────────────────────────
+  async function diagnoseConnection(testUrl, testKey) {
+    const url = testUrl || SUPABASE_URL;
+    const key = testKey || SUPABASE_KEY;
+    const results = [];
+    if (!url || !key) {
+      return [{ name: "配置检查", ok: false, msg: "URL 或 Key 为空" }];
+    }
+    results.push({ name: "配置检查", ok: true, msg: `URL: ${url.slice(0, 30)}... Key: ${key.slice(0, 20)}...` });
+
+    const client = makeClient(url, key);
+    if (!client) {
+      results.push({ name: "客户端创建", ok: false, msg: "createClient 失败" });
+      return results;
+    }
+    results.push({ name: "客户端创建", ok: true, msg: "Supabase 客户端已创建" });
+
+    try {
+      const { data, error } = await client.from("products").select("id", { count: "exact", head: true });
+      if (error) {
+        results.push({ name: "商品表读取", ok: false, msg: error.message + (error.hint ? " | hint: " + error.hint : "") });
+      } else {
+        results.push({ name: "商品表读取", ok: true, msg: "成功" });
+      }
+    } catch (e) {
+      results.push({ name: "商品表读取", ok: false, msg: "网络错误: " + e.message });
+    }
+
+    try {
+      const { count, error } = await client.from("products").select("*", { count: "exact", head: true });
+      if (error) throw error;
+      results.push({ name: "商品数量", ok: true, msg: `${count} 件` });
+    } catch (e) {
+      results.push({ name: "商品数量", ok: false, msg: e.message });
+    }
+
+    try {
+      const testId = "__DIAG_" + Date.now();
+      const { error: insErr } = await client.from("products").insert({ id: testId, name: "诊断测试", category: "测试", cost: 0, taobao_price: 0, stock: 0, location: "测试", images: [], description: "自动诊断", recommended: false, hidden: true });
+      if (insErr) {
+        results.push({ name: "写入测试", ok: false, msg: insErr.message });
+      } else {
+        results.push({ name: "写入测试", ok: true, msg: "INSERT 成功" });
+        await client.from("products").delete().eq("id", testId);
+        results.push({ name: "删除测试", ok: true, msg: "DELETE 成功 (已清理)" });
+      }
+    } catch (e) {
+      results.push({ name: "写入测试", ok: false, msg: "网络错误: " + e.message });
+    }
+
+    try {
+      const { data: oData, error: oErr } = await client.from("orders").select("*", { count: "exact", head: true });
+      if (oErr) throw oErr;
+      results.push({ name: "订单表读取", ok: true, msg: "成功" });
+    } catch (e) {
+      results.push({ name: "订单表读取", ok: false, msg: e.message });
+    }
+
+    return results;
+  }
+
+  async function applyCustomKey(url, key) {
+    if (!url || !key) return alert("请填写 URL 和 Key");
+    setDiagResult(null);
+    setSyncStatus({ text: "正在验证新 Key...", color: "#854f0b" });
+    const results = await diagnoseConnection(url, key);
+    setDiagResult(results);
+    const allOk = results.every(r => r.ok);
+    if (allOk) {
+      const client = makeClient(url, key);
+      setRuntimeDb(client);
+      setSyncStatus({ text: "✓ Key 验证通过，已切换到新连接", color: "#0f6e56" });
+      try {
+        const { data: pRows, error: pErr } = await client.from("products").select("*").order("created_at");
+        if (!pErr && pRows) { setProducts(pRows.map(dbToProduct)); }
+        const { data: oRows, error: oErr } = await client.from("orders").select("*").order("created_at", { ascending: false });
+        if (!oErr && oRows) { setOrders(oRows.map(dbToOrder)); }
+        setDbMode(true);
+        setConnError(null);
+        setSyncStatus({ text: "✓ 已连接并加载云端数据", color: "#0f6e56" });
+      } catch (e) {
+        setSyncStatus({ text: "Key 有效但加载数据失败: " + e.message, color: "#a32d2d" });
+      }
+    } else {
+      setSyncStatus({ text: "✗ Key 验证失败，请检查配置", color: "#a32d2d" });
+    }
+  }
+
+  async function uploadLocalToCloud() {
+    const client = runtimeDb || supabase;
+    if (!client) return alert("请先配置有效的 Supabase 连接");
+    if (!confirm(`确认上传本地数据到云端？\n商品: ${products.length} 件\n订单: ${orders.length} 笔\n\n⚠ 这将覆盖云端同 ID 的数据`)) return;
+    setSyncStatus({ text: "正在上传商品数据...", color: "#854f0b" });
+    let pOk = 0, pFail = 0, oOk = 0, oFail = 0;
+    const batchSize = 20;
+    for (let i = 0; i < products.length; i += batchSize) {
+      const batch = products.slice(i, i + batchSize).map(productToDb);
+      const { error } = await client.from("products").upsert(batch, { onConflict: "id" });
+      if (error) { pFail += batch.length; console.error("[sync] products batch error:", error.message); }
+      else pOk += batch.length;
+      setSyncStatus({ text: `上传商品 ${Math.min(i + batchSize, products.length)}/${products.length}...`, color: "#854f0b" });
+    }
+    if (orders.length > 0) {
+      setSyncStatus({ text: "正在上传订单数据...", color: "#854f0b" });
+      for (let i = 0; i < orders.length; i += batchSize) {
+        const batch = orders.slice(i, i + batchSize).map(orderToDb);
+        const { error } = await client.from("orders").upsert(batch, { onConflict: "id" });
+        if (error) { oFail += batch.length; console.error("[sync] orders batch error:", error.message); }
+        else oOk += batch.length;
+      }
+    }
+    const msg = `上传完成!\n商品: ${pOk} 成功, ${pFail} 失败\n订单: ${oOk} 成功, ${oFail} 失败`;
+    setSyncStatus({ text: msg.replace(/\n/g, " | "), color: pFail + oFail > 0 ? "#854f0b" : "#0f6e56" });
+    alert(msg);
+    setDbMode(true);
+    setConnError(null);
+  }
+
+  async function pullFromCloud() {
+    const client = runtimeDb || supabase;
+    if (!client) return alert("请先配置有效的 Supabase 连接");
+    setSyncStatus({ text: "正在从云端拉取...", color: "#854f0b" });
+    try {
+      const { data: pRows, error: pErr } = await client.from("products").select("*").order("created_at");
+      if (pErr) throw pErr;
+      setProducts(pRows.map(dbToProduct));
+      const { data: oRows, error: oErr } = await client.from("orders").select("*").order("created_at", { ascending: false });
+      if (oErr) throw oErr;
+      setOrders(oRows.map(dbToOrder));
+      setDbMode(true);
+      setConnError(null);
+      setSyncStatus({ text: `✓ 已拉取 ${pRows.length} 件商品 + ${oRows.length} 笔订单`, color: "#0f6e56" });
+    } catch (e) {
+      setSyncStatus({ text: "拉取失败: " + e.message, color: "#a32d2d" });
+    }
   }
 
   // ── Load data on mount ───────────────────────────────────
@@ -425,7 +567,7 @@ export default function App() {
     if(db) await db.from("orders").update({status:"shipped"}).eq("group_id",groupId).eq("status","paid");
   }
 
-  const db = supabase;
+  const db = runtimeDb || supabase;
 
   // ── Product CRUD ──────────────────────────────────────────
   async function saveProduct(form) {
@@ -743,7 +885,7 @@ export default function App() {
             <>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
                 <div style={{ display:"flex", borderBottom:S.border, flex:1 }}>
-                  {[["kanban","看板"],["orders","订单"],["products","商品库"]].map(([k,v])=>(
+                  {[["kanban","看板"],["orders","订单"],["products","商品库"],["settings","设置"]].map(([k,v])=>(
                     <button key={k} onClick={()=>setAdminTab(k)} style={{ flex:1, background:"none", border:"none", padding:"10px 0", fontSize:11, cursor:"pointer", color:adminTab===k?"#111":"#bbb", borderBottom:adminTab===k?"2px solid #111":"2px solid transparent", marginBottom:-1 }}>{v}</button>
                   ))}
                 </div>
@@ -911,6 +1053,106 @@ export default function App() {
                       </div>
                     </div>
                   );})}
+                </div>
+              )}
+
+              {/* SETTINGS */}
+              {adminTab==="settings"&&(
+                <div>
+                  {/* Connection Status */}
+                  <div style={{ background:"#fff", border:S.border, borderRadius:8, padding:16, marginBottom:14 }}>
+                    <div style={{ fontSize:12, fontWeight:600, marginBottom:10 }}>连接状态</div>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
+                      <div style={{ width:10, height:10, borderRadius:"50%", background: dbMode?"#0f6e56":db?"#854f0b":"#a32d2d" }}/>
+                      <span style={{ fontSize:11, color: dbMode?"#0f6e56":db?"#854f0b":"#a32d2d", fontWeight:500 }}>
+                        {dbMode?"已连接 Supabase":db||runtimeDb?"连接异常":"未配置"}
+                      </span>
+                    </div>
+                    <div style={{ fontSize:10, color:"#aaa", lineHeight:1.6 }}>
+                      <div>本地商品: {products.length} 件 · 订单: {orders.length} 笔</div>
+                      <div>ENV URL: {SUPABASE_URL ? SUPABASE_URL.slice(0,35)+"..." : "未设置"}</div>
+                      <div>ENV Key: {SUPABASE_KEY ? SUPABASE_KEY.slice(0,15)+"..." : "未设置"}</div>
+                      {runtimeDb&&<div style={{ color:"#0f6e56" }}>✓ 正在使用手动配置的连接</div>}
+                    </div>
+                    {syncStatus&&<div style={{ fontSize:10, color:syncStatus.color, marginTop:8, padding:"6px 10px", background:syncStatus.color==="#0f6e56"?"#e1f5ee":syncStatus.color==="#a32d2d"?"#fcebeb":"#faeeda", borderRadius:4 }}>{syncStatus.text}</div>}
+                  </div>
+
+                  {/* Data Sync */}
+                  <div style={{ background:"#fff", border:S.border, borderRadius:8, padding:16, marginBottom:14 }}>
+                    <div style={{ fontSize:12, fontWeight:600, marginBottom:10 }}>数据同步</div>
+                    <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+                      <button onClick={uploadLocalToCloud} style={{ flex:1, minWidth:120, padding:"12px 0", background:"#111", border:"none", color:"#faf9f7", fontSize:11, borderRadius:6, cursor:"pointer", letterSpacing:1 }}>
+                        ↑ 上传本地 → 云端
+                      </button>
+                      <button onClick={pullFromCloud} style={{ flex:1, minWidth:120, padding:"12px 0", background:"#fff", border:"1px solid #111", color:"#111", fontSize:11, borderRadius:6, cursor:"pointer", letterSpacing:1 }}>
+                        ↓ 拉取云端 → 本地
+                      </button>
+                    </div>
+                    <div style={{ fontSize:9, color:"#aaa", marginTop:8, lineHeight:1.5 }}>
+                      「上传」将当前 {products.length} 件商品 + {orders.length} 笔订单覆盖写入云端（upsert）<br/>
+                      「拉取」将从云端加载最新数据替换当前显示
+                    </div>
+                  </div>
+
+                  {/* API Key Diagnostic */}
+                  <div style={{ background:"#fff", border:S.border, borderRadius:8, padding:16, marginBottom:14 }}>
+                    <div style={{ fontSize:12, fontWeight:600, marginBottom:10 }}>API Key 诊断</div>
+                    <button onClick={async()=>{
+                      setDiagResult(null);
+                      setSyncStatus({ text:"正在诊断当前连接...", color:"#854f0b" });
+                      const r = await diagnoseConnection();
+                      setDiagResult(r);
+                      const allOk = r.every(x=>x.ok);
+                      setSyncStatus({ text: allOk?"✓ 当前 Key 所有测试通过":"✗ 部分测试失败，请查看下方结果", color: allOk?"#0f6e56":"#a32d2d" });
+                    }} style={{ width:"100%", padding:"11px 0", background:"#185fa5", border:"none", color:"#fff", fontSize:11, borderRadius:6, cursor:"pointer", letterSpacing:1, marginBottom:10 }}>
+                      一键诊断当前连接
+                    </button>
+                    {diagResult&&(
+                      <div style={{ background:"#f8f7f5", borderRadius:6, padding:10, marginBottom:10 }}>
+                        {diagResult.map((r,i)=>(
+                          <div key={i} style={{ display:"flex", gap:6, alignItems:"flex-start", marginBottom:4, fontSize:10, lineHeight:1.4 }}>
+                            <span style={{ color:r.ok?"#0f6e56":"#a32d2d", fontWeight:700, flexShrink:0 }}>{r.ok?"✓":"✗"}</span>
+                            <span style={{ color:"#333", fontWeight:500, flexShrink:0 }}>{r.name}:</span>
+                            <span style={{ color:r.ok?"#555":"#a32d2d", wordBreak:"break-all" }}>{r.msg}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Manual Key Input */}
+                  <div style={{ background:"#fff", border:S.border, borderRadius:8, padding:16, marginBottom:14 }}>
+                    <div style={{ fontSize:12, fontWeight:600, marginBottom:4 }}>手动配置连接</div>
+                    <div style={{ fontSize:9, color:"#aaa", marginBottom:10 }}>如果 .env 中的 Key 无效，可在此手动填入新的 Key 临时修复（刷新后需重新填入）</div>
+                    <div style={{ marginBottom:8 }}>
+                      <div style={{ fontSize:10, color:"#aaa", marginBottom:3 }}>Supabase URL</div>
+                      <input value={settingsUrl} onChange={e=>setSettingsUrl(e.target.value)} placeholder={SUPABASE_URL||"https://xxx.supabase.co"} style={{ width:"100%", padding:"9px 11px", border:"1px solid #e0ddd8", borderRadius:6, fontSize:11, boxSizing:"border-box", background:"#fff", fontFamily:"monospace" }}/>
+                    </div>
+                    <div style={{ marginBottom:10 }}>
+                      <div style={{ fontSize:10, color:"#aaa", marginBottom:3 }}>Anon Key（以 eyJhbGci 开头）</div>
+                      <textarea value={settingsKey} onChange={e=>setSettingsKey(e.target.value)} placeholder="eyJhbGciOiJIUzI1NiIs..." rows={3} style={{ width:"100%", padding:"9px 11px", border:"1px solid #e0ddd8", borderRadius:6, fontSize:10, boxSizing:"border-box", background:"#fff", fontFamily:"monospace", resize:"none" }}/>
+                    </div>
+                    <div style={{ display:"flex", gap:8 }}>
+                      <button onClick={async()=>{
+                        const url = settingsUrl || SUPABASE_URL;
+                        const key = settingsKey || SUPABASE_KEY;
+                        setDiagResult(null);
+                        setSyncStatus({ text:"正在诊断填入的 Key...", color:"#854f0b" });
+                        const r = await diagnoseConnection(url, key);
+                        setDiagResult(r);
+                        setSyncStatus({ text: r.every(x=>x.ok)?"✓ 新 Key 测试通过":"✗ 部分测试失败", color: r.every(x=>x.ok)?"#0f6e56":"#a32d2d" });
+                      }} style={{ flex:1, padding:"11px 0", background:"#fff", border:"1px solid #185fa5", color:"#185fa5", fontSize:11, borderRadius:6, cursor:"pointer" }}>
+                        仅诊断
+                      </button>
+                      <button onClick={()=>applyCustomKey(settingsUrl||SUPABASE_URL, settingsKey||SUPABASE_KEY)} style={{ flex:1, padding:"11px 0", background:"#0f6e56", border:"none", color:"#fff", fontSize:11, borderRadius:6, cursor:"pointer", fontWeight:600 }}>
+                        应用并连接
+                      </button>
+                    </div>
+                    <div style={{ fontSize:9, color:"#aaa", marginTop:8, lineHeight:1.5 }}>
+                      提示: Supabase 控制台 → Settings → API → Project API keys → anon public<br/>
+                      ⚠ 不要粘贴 sb_secret_ 开头的部分，只需 JWT 令牌（以 eyJ 开头）
+                    </div>
+                  </div>
                 </div>
               )}
             </>
