@@ -22,3 +22,9 @@ YELLO/
 script.js
 styles.css
 navi.html
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
